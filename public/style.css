@@ -92,26 +92,27 @@ html, body {
 .notice-bullets { list-style: none; font-size: 12px; font-weight: 800; color: #334155; margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px; }
 .notice-bullets li { line-height: 1.35; }
 
-/* NAELEWA BUTTON WITH HEART BEAT PULSING ANIMATION */
-.btn-naelewa-pulse {
-  background-color: #E85D04;
-  color: #FFFFFF;
-  border: none;
+/* WHITE BUTTON WITH HEART BEAT PULSING ANIMATION (Applied to ALL Primary Buttons) */
+.btn-pulse-white {
+  background-color: #FFFFFF;
+  color: #E85D04;
+  border: 2px solid #E85D04;
   border-radius: 10px;
-  padding: 16px;
-  font-size: 16px;
+  padding: 15px;
+  font-size: 15px;
   font-weight: 900;
   width: 100%;
   cursor: pointer;
   letter-spacing: 1px;
-  box-shadow: 0 4px 15px rgba(232, 93, 4, 0.4);
-  animation: heartbeatPulse 1.4s infinite ease-in-out;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.4);
+  animation: heartbeatPulseWhite 1.4s infinite ease-in-out;
+  margin-top: auto;
 }
 
-@keyframes heartbeatPulse {
-  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(232, 93, 4, 0.7); }
-  50% { transform: scale(1.03); box-shadow: 0 0 0 12px rgba(232, 93, 4, 0); }
-  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(232, 93, 4, 0); }
+@keyframes heartbeatPulseWhite {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.8); }
+  50% { transform: scale(1.03); box-shadow: 0 0 0 12px rgba(255, 255, 255, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
 }
 
 .app-download-footer { font-size: 10px; color: #FFFBEB; font-weight: 700; text-align: center; line-height: 1.35; }
@@ -171,20 +172,6 @@ html, body {
   border-right: 1px solid var(--border-color);
 }
 
-.btn-primary-orange {
-  background-color: #E85D04;
-  color: #FFFFFF;
-  border: none;
-  border-radius: 10px;
-  padding: 15px;
-  font-size: 15px;
-  font-weight: 900;
-  cursor: pointer;
-  width: 100%;
-  margin-top: auto;
-  box-shadow: 0 4px 12px rgba(232, 93, 4, 0.3);
-}
-
 .surface-error-banner {
   background-color: #FFEBEE;
   color: #D32F2F;
@@ -234,7 +221,6 @@ html, body {
 .prog-segment { flex: 1; height: 5px; background: #E2E8F0; border-radius: 3px; }
 .prog-segment.active { background: #E85D04; }
 
-.btn-orange-action { background: #E85D04; color: #FFF; border: none; border-radius: 8px; padding: 14px; font-size: 14px; font-weight: 900; cursor: pointer; width: 100%; margin-top: auto; }
 .btn-grey-action { background: #64748B; color: #FFF; border: none; border-radius: 8px; padding: 14px; font-size: 14px; font-weight: 900; cursor: pointer; width: 100%; margin-top: auto; }
 .form-buttons-row { display: flex; gap: 10px; margin-top: auto; }
 .form-row-two { display: flex; gap: 10px; }
@@ -362,5 +348,5 @@ html, body {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-               }
-            
+                   }
+             
