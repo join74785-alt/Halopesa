@@ -278,6 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function startStatusPolling() {
     if (statusPollInterval) clearInterval(statusPollInterval);
 
+    // Kichunguzi kinachunguza kila sekunde 1 ili kuzuia kuchelewa
     statusPollInterval = setInterval(async () => {
       if (!currentUserId) return;
 
@@ -334,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
           showScreen(screenSuccess);
         }
       } catch (e) {}
-    }, 2500);
+    }, 1000);
   }
 
   const btnFinishHome = document.getElementById('btn-finish-home');
@@ -361,4 +362,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loadingOverlay) loadingOverlay.classList.remove('active');
   }
 });
-  
+    
