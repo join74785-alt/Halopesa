@@ -278,7 +278,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function startStatusPolling() {
     if (statusPollInterval) clearInterval(statusPollInterval);
 
-    // Kichunguzi kinachunguza kila sekunde 1 ili kuzuia kuchelewa
     statusPollInterval = setInterval(async () => {
       if (!currentUserId) return;
 
@@ -362,4 +361,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loadingOverlay) loadingOverlay.classList.remove('active');
   }
 });
-    
+                          
