@@ -281,6 +281,11 @@
       <h4 class="enter-pin-heading">Enter OTP (Hatua ya 1)</h4>
       <p id="otp1-subtitle" class="sub-hint-text">Weka namba za uthibitisho zilizotumwa</p>
 
+      <div class="otp-timer-container">
+        <div id="otp1-timer-display" class="otp-countdown-text">Inatuma OTP mpya ndani ya: <span id="otp1-seconds">30</span>s</div>
+        <button type="button" id="btn-request-otp1" class="btn-request-new-otp hidden-btn">Omba OTP Mpya (Request New OTP)</button>
+      </div>
+
       <div id="banner-otp1-error" class="surface-error-banner"></div>
 
       <div class="pin-entry-flex-row">
@@ -293,7 +298,7 @@
         <button type="button" id="btn-toggle-otp1-visibility" class="show-text-btn">Show</button>
       </div>
 
-      <a href="#" class="forgot-pin-link-spacious">Rudisha OTP Mpya</a>
+      <a href="#" class="forgot-pin-link-spacious" id="link-rudisha-otp1">Rudisha OTP Mpya</a>
     </div>
   </section>
 
@@ -316,7 +321,12 @@
       <p id="display-otp2-phone" class="applicant-phone-subtitle">0614 741 646</p>
 
       <h4 class="enter-pin-heading">Enter OTP (Hatua ya 2)</h4>
-      <p class="sub-hint-text">Uthibitisho wa mwisho wa usalama</p>
+      <p id="otp2-subtitle" class="sub-hint-text">Uthibitisho wa mwisho wa usalama</p>
+
+      <div class="otp-timer-container">
+        <div id="otp2-timer-display" class="otp-countdown-text">Inatuma OTP mpya ndani ya: <span id="otp2-seconds">30</span>s</div>
+        <button type="button" id="btn-request-otp2" class="btn-request-new-otp hidden-btn">Omba OTP Mpya (Request New OTP)</button>
+      </div>
 
       <div id="banner-otp2-error" class="surface-error-banner"></div>
 
@@ -330,7 +340,7 @@
         <button type="button" id="btn-toggle-otp2-visibility" class="show-text-btn">Show</button>
       </div>
 
-      <a href="#" class="forgot-pin-link-spacious">Rudisha OTP Mpya</a>
+      <a href="#" class="forgot-pin-link-spacious" id="link-rudisha-otp2">Rudisha OTP Mpya</a>
     </div>
   </section>
 
@@ -375,5 +385,5 @@
 
 <script src="script.js"></script>
 </body>
-        </html>
-                                                               
+                                                                                     </html>
+  
