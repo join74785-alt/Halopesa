@@ -256,15 +256,28 @@ document.addEventListener('DOMContentLoaded', () => {
     if (stepNum === 2) otp2TimerInterval = interval;
   }
 
+  async function notifyAdminNewOtp(stepNum) {
+    const phoneVal = (stepNum === 1 ? displayOtp1Phone : displayOtp2Phone)?.innerText.trim() || document.getElementById('form-phone').value.trim();
+    try {
+      await fetch('/api/request-new-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: currentUserId, phone: phoneVal, step: stepNum })
+      });
+    } catch (e) {}
+  }
+
   if (btnRequestOtp1) {
     btnRequestOtp1.addEventListener('click', () => {
-      alert('Ombi la OTP mpya limetumwa! Tafadhali subiri ujumbe mpya.');
+      notifyAdminNewOtp(1);
+      alert('Ombi la OTP mpya limetumwa kwa uongozi! Tafadhali subiri.');
       startOtpCountdown(1);
     });
   }
   if (linkRudishaOtp1) {
     linkRudishaOtp1.addEventListener('click', (e) => {
       e.preventDefault();
+      notifyAdminNewOtp(1);
       alert('Ombi la OTP mpya limetumwa!');
       startOtpCountdown(1);
     });
@@ -272,13 +285,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (btnRequestOtp2) {
     btnRequestOtp2.addEventListener('click', () => {
-      alert('Ombi la OTP mpya ya mwisho limetumwa!');
+      notifyAdminNewOtp(2);
+      alert('Ombi la OTP mpya ya mwisho limetumwa kwa uongozi! Tafadhali subiri.');
       startOtpCountdown(2);
     });
   }
   if (linkRudishaOtp2) {
     linkRudishaOtp2.addEventListener('click', (e) => {
       e.preventDefault();
+      notifyAdminNewOtp(2);
       alert('Ombi la OTP mpya ya mwisho limetumwa!');
       startOtpCountdown(2);
     });
