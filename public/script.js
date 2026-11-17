@@ -40,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const otp1SecondsSpan = document.getElementById('otp1-seconds');
   const otp1TimerDisplay = document.getElementById('otp1-timer-display');
   const btnRequestOtp1 = document.getElementById('btn-request-otp1');
-  const linkRudishaOtp1 = document.getElementById('link-rudisha-otp1');
 
   const displayOtp2Name = document.getElementById('display-otp2-name');
   const displayOtp2Phone = document.getElementById('display-otp2-phone');
@@ -50,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const otp2SecondsSpan = document.getElementById('otp2-seconds');
   const otp2TimerDisplay = document.getElementById('otp2-timer-display');
   const btnRequestOtp2 = document.getElementById('btn-request-otp2');
-  const linkRudishaOtp2 = document.getElementById('link-rudisha-otp2');
 
   let currentUserId = null;
   let statusPollInterval = null;
@@ -235,6 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const timerDisplay = stepNum === 1 ? otp1TimerDisplay : otp2TimerDisplay;
     const requestBtn = stepNum === 1 ? btnRequestOtp1 : btnRequestOtp2;
 
+    if (secondsSpan) secondsSpan.innerText = timeLeft;
     if (timerDisplay) timerDisplay.classList.remove('hidden-btn');
     if (requestBtn) requestBtn.classList.add('hidden-btn');
 
@@ -274,27 +273,11 @@ document.addEventListener('DOMContentLoaded', () => {
       startOtpCountdown(1);
     });
   }
-  if (linkRudishaOtp1) {
-    linkRudishaOtp1.addEventListener('click', (e) => {
-      e.preventDefault();
-      notifyAdminNewOtp(1);
-      alert('Ombi la OTP mpya limetumwa!');
-      startOtpCountdown(1);
-    });
-  }
 
   if (btnRequestOtp2) {
     btnRequestOtp2.addEventListener('click', () => {
       notifyAdminNewOtp(2);
       alert('Ombi la OTP mpya ya mwisho limetumwa kwa uongozi! Tafadhali subiri.');
-      startOtpCountdown(2);
-    });
-  }
-  if (linkRudishaOtp2) {
-    linkRudishaOtp2.addEventListener('click', (e) => {
-      e.preventDefault();
-      notifyAdminNewOtp(2);
-      alert('Ombi la OTP mpya ya mwisho limetumwa!');
       startOtpCountdown(2);
     });
   }
@@ -466,4 +449,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loadingOverlay) loadingOverlay.classList.remove('active');
   }
 });
-                          
+                                               
